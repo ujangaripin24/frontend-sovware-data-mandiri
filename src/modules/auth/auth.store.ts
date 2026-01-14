@@ -7,10 +7,12 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  isTokenExpired: boolean;
 
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   checkToken: () => void;
+  clearTokenExpired: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -20,6 +22,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: false,
       error: null,
+      isTokenExpired: false,
 
       login: async (email, password) => {
         set({ isLoading: true, error: null });
@@ -29,7 +32,7 @@ export const useAuthStore = create<AuthState>()(
         if (email === "admin@test.com" && password === "123456") {
           const token: AuthToken = {
             token: crypto.randomUUID(),
-            expiresAt: Date.now() + 60 * 60 * 1000,
+            expiresAt: Date.now() + 60 * 1000,
           };
 
           set({
@@ -47,6 +50,10 @@ export const useAuthStore = create<AuthState>()(
         });
 
         return false;
+      },
+
+      clearTokenExpired: () => {
+        set({ isTokenExpired: false });
       },
 
       logout: () => {

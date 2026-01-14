@@ -8,8 +8,9 @@ import {
   sidebarClasses,
   SubMenu,
 } from 'react-pro-sidebar'
-import { MonitorIcon, UserIcon } from './Icons';
-import { Link } from 'react-router-dom';
+import { ExitIcon, MonitorIcon, UserIcon } from './Icons';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../modules/auth/auth.store';
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -20,6 +21,12 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   isSidebarOpen,
   setIsSidebarOpen
 }) => {
+  const logout = useAuthStore((s) => s.logout);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate("/", { replace: true });
+  };
   return (
     <div style={{ display: 'flex', height: '100vh', position: 'sticky', top: 0, zIndex: 100 }}>
       <ProSidebar
@@ -61,15 +68,15 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             }}
           >
             <SubMenu defaultOpen label="Dashboard">
-              <MenuItem icon={<MonitorIcon/>}> Dashboard </MenuItem>
-              <MenuItem icon={<MonitorIcon/>}> Monitor </MenuItem>
-              <MenuItem icon={<MonitorIcon/>}>
+              <MenuItem icon={<MonitorIcon />}> Dashboard </MenuItem>
+              <MenuItem icon={<MonitorIcon />}> Monitor </MenuItem>
+              <MenuItem icon={<MonitorIcon />}>
                 <Link to={'/dashboard/flow'}>Design</Link>
               </MenuItem>
             </SubMenu>
 
             <SubMenu defaultOpen label="Management">
-              <MenuItem icon={<UserIcon/>}> Users Management</MenuItem>
+              <MenuItem icon={<UserIcon />}> Users Management</MenuItem>
             </SubMenu>
           </Menu>
         </div>
@@ -79,6 +86,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             <Button
               type="submit"
               className="w-full bg-[#2D68A2] text-white"
+              onPress={handleLogout}
+              startContent={<ExitIcon />}
             >
               Logout
             </Button>

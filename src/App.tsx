@@ -8,6 +8,7 @@ import { useSplashStore } from "./hooks/splash.hook";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
 import DashboardPage from "./modules/dashboard/dashboard.page";
+import AlertModalExpireToken from "./modules/auth/components/AlertModalExpireToken";
 
 function App() {
   const checkToken = useAuthStore((s) => s.checkToken);
@@ -15,6 +16,8 @@ function App() {
 
   useEffect(() => {
     checkToken();
+    const interval = setInterval(checkToken, 10_000);
+    return () => clearInterval(interval);
   }, [checkToken]);
 
   if (showSplash) {
@@ -22,22 +25,25 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<AuthPage />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Layout />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<DashboardPage />} />
-          <Route path="flow" element={<FlowPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <AlertModalExpireToken />
+        <Routes>
+          <Route path="/" element={<AuthPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<DashboardPage />} />
+            <Route path="flow" element={<FlowPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

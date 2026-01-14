@@ -14,6 +14,7 @@ Tambahan
 * React-router-dom
 * React-Pro-Sidebar
 * Embla-Carousel-Autoplay
+* HeroUI Icons
 Struktur Folder
 * Based DDD (domain driven design)
 * Per-Modular (dibuat terisolasi)
