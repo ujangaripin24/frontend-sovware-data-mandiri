@@ -102,7 +102,7 @@ const LoginForm: React.FC = () => {
         />
 
         <Checkbox
-          isSelected={rememberme}
+          isSelected={rememberMe}
           onValueChange={setRememberEmail}
         >
           Remember me
