@@ -30,7 +30,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   };
   const isActive = (path: string) => location.pathname === path;
   return (
-    <div style={{ display: 'flex', height: '100vh', position: 'sticky', top: 0, zIndex: 100 }}>
+    <div style={{ display: 'flex', height: '100vh', position: 'sticky', top: 0, zIndex: 50 }}>
       <ProSidebar
         toggled={isSidebarOpen}
         collapsed={!isSidebarOpen}

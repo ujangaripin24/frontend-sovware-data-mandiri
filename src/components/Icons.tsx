@@ -198,6 +198,31 @@ export const DesainIcon = (props: React.JSX.IntrinsicAttributes & React.SVGProps
   )
 }
 
+export const BackArrow = (props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      focusable="false"
+      height="1em"
+      role="presentation"
+      viewBox="0 0 24 24"
+      width="1em"
+      {...props}
+    >
+      <path
+        d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fillRule="evenodd"
+        clipRule="evenodd"
+        strokeWidth={1.5}
+      />
+    </svg>
+  )
+}
+
 export const DashboardIcon = (props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
@@ -232,7 +257,7 @@ export const DashboardIcon = (props: React.JSX.IntrinsicAttributes & React.SVGPr
   )
 }
 
-export const SearchIcon = ({size = 24, strokeWidth = 1.5, ...props}) => {
+export const SearchIcon = ({ size = 24, strokeWidth = 1.5, ...props }) => {
   return (
     <svg
       aria-hidden="true"

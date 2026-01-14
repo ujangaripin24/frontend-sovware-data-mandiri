@@ -6,9 +6,30 @@ export type DesignClass = {
   agentCount: number;
 };
 
+export type DesignFlow = {
+  id: number;
+  version: string;
+  desainName: string;
+  status: string;
+  comment: string;
+  last_updated: string;
+}
+
+export type FlowVersion = {
+  id: string;
+  version: string;
+  createdAt: string;
+  status: "DRAFT" | "PUBLISHED";
+};
+
 interface DesignClassState {
-  applyFilterAndPagination(): unknown;
   classes: DesignClass[];
+  dataFlow: DesignFlow[];
+  selectedClass?: DesignClass;
+  selectedFlow?: DesignFlow;
+  isModalOpen: boolean;
+  isModalFlowOpen: boolean;
+  flowVersions: FlowVersion[];
 
   search: string;
   page: number;
@@ -19,20 +40,35 @@ interface DesignClassState {
   totalPages: number;
 
   loadClasses: () => void;
+  loadDesainFlow: () => void;
   setSearch: (value: string) => void;
   setPage: (page: number) => void;
+  openClass: (cls: DesignClass) => void;
+  openFlow: (flw: DesignFlow) => void;
+  closeModalFlow: () => void;
+  closeModal: () => void;
+  applyFilterAndPagination: () => void;
+  selectClass: (cls: DesignClass) => void;
+  selectFlow: (flw: DesignFlow) => void;
+  openModal: () => void;
+  openModalFlow: (flw: DesignFlow) => void;
 }
 
 export const useDesignClassStore = create<DesignClassState>((set, get) => ({
   classes: [],
-
+  dataFlow: [],
   search: "",
   page: 1,
   rowsPerPage: 8,
-
   filteredClasses: [],
   paginatedClasses: [],
   totalPages: 1,
+  selectedClass: undefined,
+  selectedFlow: undefined,
+  isModalOpen: false,
+  isModalFlowOpen: false,
+  flowVersions: [],
+  flowDesainVersion: [],
 
   loadClasses: () => {
     const data: DesignClass[] = [
@@ -52,6 +88,21 @@ export const useDesignClassStore = create<DesignClassState>((set, get) => ({
     get().applyFilterAndPagination();
   },
 
+  loadDesainFlow: () => {
+    const dataFlow: DesignFlow[] = [
+      { id: 1, version: "0.1", desainName: "-", status: "Draft", comment: "this my comment", last_updated: "2/2/2024" },
+      { id: 2, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 3, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 4, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 5, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 6, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 7, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 8, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 9, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+    ];
+    set({ dataFlow: dataFlow });
+  },
+
   setSearch: (value) => {
     set({ search: value, page: 1 });
     get().applyFilterAndPagination();
@@ -69,11 +120,7 @@ export const useDesignClassStore = create<DesignClassState>((set, get) => ({
       c.name.toLowerCase().includes(search.toLowerCase())
     );
 
-    const totalPages = Math.max(
-      1,
-      Math.ceil(filtered.length / rowsPerPage)
-    );
-
+    const totalPages = Math.max(1, Math.ceil(filtered.length / rowsPerPage));
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
@@ -83,4 +130,57 @@ export const useDesignClassStore = create<DesignClassState>((set, get) => ({
       totalPages,
     });
   },
+
+  openClass: (cls) => {
+    set({ selectedClass: cls });
+    get().openModal();
+  },
+
+  openFlow: (flw) => {
+    set({ selectedFlow: flw, isModalFlowOpen: true })
+  },
+
+  selectClass: (cls) => {
+    set({ selectedClass: cls });
+  },
+
+  selectFlow: (flw) => {
+    set({ selectedFlow: flw })
+  },
+
+  openModalFlow: (flw: DesignFlow) => {
+    console.log("Klik terdeteksi untuk ID:", flw.id)
+    set({
+      selectedFlow: flw,
+      isModalFlowOpen: true
+    });
+  },
+
+  closeModalFlow: () => {
+    set({
+      isModalFlowOpen: false
+    })
+  },
+
+  openModal: () => {
+    const cls = get().selectedClass;
+    if (!cls) return;
+
+    const versions: FlowVersion[] = [
+      { id: "v1", version: "1.0.0", createdAt: "2024-01-10", status: "PUBLISHED" },
+      { id: "v2", version: "1.1.0", createdAt: "2024-02-12", status: "DRAFT" },
+    ];
+
+    set({
+      flowVersions: versions,
+      isModalOpen: true,
+    });
+  },
+
+  closeModal: () =>
+    set({
+      isModalOpen: false,
+      selectedClass: undefined,
+      flowVersions: [],
+    }),
 }));

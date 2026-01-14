@@ -14,8 +14,9 @@ import {
 } from "@heroui/react";
 import { DesainIcon, SearchIcon } from "../../components/Icons";
 import { useDesignClassStore } from "./designSession.store";
+import DesignFlowVersionModal from "./components/DesignFlowVersionModal";
 
-const DesignClassPage = () => {
+const DesignClassPage:React.FC = () => {
   const {
     paginatedClasses,
     totalPages,
@@ -23,6 +24,9 @@ const DesignClassPage = () => {
     loadClasses,
     setSearch,
     setPage,
+    selectedClass,
+    selectClass,
+    openModal,
   } = useDesignClassStore();
 
   useEffect(() => {
@@ -47,7 +51,12 @@ const DesignClassPage = () => {
               startContent={<SearchIcon size={18} />}
               onChange={(e) => setSearch(e.target.value)}
               endContent={
-                <Button className="bg-[#2D68A2] text-white" size="sm">
+                <Button
+                  className="bg-[#2D68A2] text-white"
+                  size="sm"
+                  isDisabled={!selectedClass}
+                  onPress={openModal}
+                >
                   Open Class
                 </Button>
               }
@@ -78,7 +87,12 @@ const DesignClassPage = () => {
 
           <TableBody items={paginatedClasses}>
             {(item) => (
-              <TableRow key={item.id}>
+              <TableRow
+                key={item.id}
+                className={`cursor-pointer hover:bg-gray-100 ${selectedClass?.id === item.id ? "bg-blue-50" : ""
+                  }`}
+                onClick={() => selectClass(item)}
+              >
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.agentCount}</TableCell>
               </TableRow>
@@ -86,6 +100,7 @@ const DesignClassPage = () => {
           </TableBody>
         </Table>
       </div>
+      <DesignFlowVersionModal />
     </div>
   );
 };
