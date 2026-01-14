@@ -1,20 +1,23 @@
 import React from "react";
-import { Button } from "@heroui/react";
 import FlowCanvas from "./components/FlowCanvas";
-import { useFlowStore } from "./flow.store";
 
 const FlowPage: React.FC = () => {
-  const addProcessor = useFlowStore((s) => s.addProcessor);
-
   return (
-    <div className="h-full flex flex-col gap-4">
-      <div>
-        <Button color="primary" onClick={addProcessor}>
-          Add Processor
-        </Button>
+    <div className="flex h-full gap-4">
+      <div className="w-64 border-r p-4">
+        <h3 className="mb-2 font-semibold">Components</h3>
+        <div
+          draggable
+          onDragStart={(e) =>
+            e.dataTransfer.setData("application/reactflow", "processor")
+          }
+          className="p-2 border rounded cursor-grab bg-white"
+        >
+          Processor
+        </div>
       </div>
 
-      <div className="flex-1 border rounded-md">
+      <div className="flex-1">
         <FlowCanvas />
       </div>
     </div>

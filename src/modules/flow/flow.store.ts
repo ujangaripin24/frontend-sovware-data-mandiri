@@ -8,18 +8,19 @@ import {
 import { v4 as uuid } from "uuid";
 import type { FlowState } from "./flow.type";
 
-export const useFlowStore = create<FlowState>((set) => ({
+export const useFlowStore = create<FlowState>((set, get) => ({
   nodes: [],
   edges: [],
+  selectedNodeId: undefined,
 
-  addProcessor: () =>
+  addProcessorAtPosition: (x, y) =>
     set((state) => ({
       nodes: [
         ...state.nodes,
         {
           id: uuid(),
           type: "default",
-          position: { x: 100, y: 100 },
+          position: { x, y },
           data: { label: "Processor" },
         },
       ],
@@ -35,8 +36,20 @@ export const useFlowStore = create<FlowState>((set) => ({
       edges: applyEdgeChanges(changes, state.edges),
     })),
 
-  deleteNode: (nodeId) =>
-    set((state) => ({
-      nodes: state.nodes.filter((n) => n.id !== nodeId),
-    })),
+  setSelectedNode: (id) => set({ selectedNodeId: id }),
+
+  deleteSelectedNode: () =>
+    set((state) => {
+      if (!state.selectedNodeId) return state;
+
+      return {
+        nodes: state.nodes.filter((n) => n.id !== state.selectedNodeId),
+        edges: state.edges.filter(
+          (e) =>
+            e.source !== state.selectedNodeId &&
+            e.target !== state.selectedNodeId
+        ),
+        selectedNodeId: undefined,
+      };
+    }),
 }));

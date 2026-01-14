@@ -18,8 +18,19 @@ Struktur Folder
 * Per-Modular (dibuat terisolasi)
 
 ## Task
-* Tech Setup [done]
-* Setup Router [done]
-* Desain UI [develop]
-* Validation Form [develop]
-* Component/Layout [develop]
+### 1. Authentication
+* Test Case 1.1 – Login With Valid Credentials [done]
+* Test Case 1.2 – Login With Invalid Credentials [done]
+* Test Case 1.3 – Authentication Token Expired [done]
+### 2. Create Design Flow (Drag & Drop Canvas)
+* Test Case 2.1 – Add Processor to Canvas [done]
+* Test Case 2.2 – Move Processor on Canvas [done]
+* Test Case 2.3 – Delete Processor [done]
+### 3. Connection Processor (Connect Nodes Like NiFi)
+* Test Case 3.1 – Create Connection Between Two Processors [develop]
+* Test Case 3.2 – Invalid Connection Attempt [develop]
+* Test Case 3.3 – Delete Connection [develop]
+### 4. Publish Design
+* Test Case 4.1 – Successful Publish Flow [develop]
+* Test Case 4.2 – Publish Validation Error [develop]
+* Test Case 4.3 – Publish Without Any Processor [develop]
