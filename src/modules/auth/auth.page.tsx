@@ -1,7 +1,7 @@
-import { Button, Checkbox, Form, Image, Input } from '@heroui/react'
+import { Button, Checkbox, Form, Image, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import Logo from "../../assets/assets-s2re.svg"
-import { EyeFilledIcon, EyeSlashFilledIcon } from '../../components/Icons'
+import { AlertDanger, EyeFilledIcon, EyeSlashFilledIcon } from '../../components/Icons'
 import Image1 from './../../assets/carousel/carousel-1.png'
 import type { EmblaCarouselType } from "embla-carousel"
 import useEmblaCarousel from "embla-carousel-react";
@@ -30,10 +30,19 @@ const AuthPage: React.FC = () => {
   const login = useAuthStore((s) => s.login)
   const isLoading = useAuthStore((s) => s.isLoading)
   const err = useAuthStore((s) => s.error);
+  const [isErrorOpen, setIsErrorOpen] = useState(false);
   const startSplash = useSplashStore((s) => s.startSplash);
 
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: string;
+    password?: string;
+  }>({});
+  const clearFieldError = (field: "email" | "password") => {
+    setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -42,14 +51,17 @@ const AuthPage: React.FC = () => {
 
     if (success) {
       startSplash();
-
       setTimeout(() => {
         navigate("/dashboard");
       }, 5000);
+    } else {
+      setFieldErrors({
+        email: "Email atau password salah",
+        password: "Email atau password salah",
+      });
+      setIsErrorOpen(true);
     }
-
-
-  }
+  };
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -79,38 +91,73 @@ const AuthPage: React.FC = () => {
               name="email"
               placeholder="email"
               type="email"
-              variant='bordered'
+              variant="bordered"
+              isInvalid={!!fieldErrors.email}
+              errorMessage={fieldErrors.email}
+              onChange={() => clearFieldError("email")}
             />
 
             <Input
               isRequired
-              className="max-w-xs"
               labelPlacement="outside"
               name="password"
               placeholder="password"
               variant="bordered"
               type={isVisible ? "text" : "password"}
+              isInvalid={!!fieldErrors.password}
+              errorMessage={fieldErrors.password}
+              onChange={() => clearFieldError("password")}
               endContent={
                 <button
-                  aria-label="toggle password visibility"
                   className="focus:outline-none"
                   type="button"
                   onClick={toggleVisibility}
                 >
                   {isVisible ? (
-                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                    <EyeSlashFilledIcon className="text-2xl text-default-400" />
                   ) : (
-                    <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                    <EyeFilledIcon className="text-2xl text-default-400" />
                   )}
                 </button>
               }
             />
 
+
             <Checkbox>Remember me</Checkbox>
-            <Button type="submit" className='w-full bg-[#2D68A2] text-white'>
+            <Button
+              type="submit"
+              isLoading={isLoading}
+              isDisabled={isLoading}
+              className="w-full bg-[#2D68A2] text-white"
+            >
               Login
             </Button>
           </Form>
+          <Modal isOpen={isErrorOpen} onOpenChange={setIsErrorOpen} placement="center" backdrop='blur' size='sm'>
+            <ModalContent>
+              {(onClose) => (
+                <>
+                  <ModalBody>
+                    <AlertDanger />
+                    <p className='font-bold'>Error</p>
+                    <p className="text-sm text-gray-500">
+                      You must confirm your email address first before performing this action.
+                    </p>
+                  </ModalBody>
+
+                  <ModalFooter>
+                    <Button
+                      color="primary"
+                      className="bg-[#2D68A2] text-white"
+                      onPress={onClose}
+                    >
+                      Got It
+                    </Button>
+                  </ModalFooter>
+                </>
+              )}
+            </ModalContent>
+          </Modal>
         </div>
       </div>
 
