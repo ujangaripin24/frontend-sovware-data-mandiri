@@ -8,8 +8,8 @@ import {
   sidebarClasses,
   SubMenu,
 } from 'react-pro-sidebar'
-import { ExitIcon, MonitorIcon, UserIcon } from './Icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { DashboardIcon, DesainIcon, ExitIcon, MonitorIcon, UserIcon } from './Icons';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../modules/auth/auth.store';
 
 interface SidebarProps {
@@ -21,12 +21,14 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   isSidebarOpen,
   setIsSidebarOpen
 }) => {
+  const location = useLocation();
   const logout = useAuthStore((s) => s.logout);
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
     navigate("/", { replace: true });
   };
+  const isActive = (path: string) => location.pathname === path;
   return (
     <div style={{ display: 'flex', height: '100vh', position: 'sticky', top: 0, zIndex: 100 }}>
       <ProSidebar
@@ -60,18 +62,38 @@ const SidebarComponent: React.FC<SidebarProps> = ({
         <div style={{ flex: 1 }}>
           <Menu
             menuItemStyles={{
-              button: {
+              button: ({ active }) => ({
+                backgroundColor: active ? '#e6f2ff' : 'transparent',
+                color: active ? '#2D68A2' : '#666',
                 '&:hover': {
                   backgroundColor: '#f5f5f5',
+                  color: '#2D68A2',
                 },
-              },
+              }),
             }}
           >
             <SubMenu defaultOpen label="Dashboard">
-              <MenuItem icon={<MonitorIcon />}> Dashboard </MenuItem>
-              <MenuItem icon={<MonitorIcon />}> Monitor </MenuItem>
-              <MenuItem icon={<MonitorIcon />}>
-                <Link to={'/dashboard/flow'}>Design</Link>
+              <MenuItem
+                active={isActive('/dashboard')}
+                icon={<DashboardIcon />}
+                component={<Link to="/dashboard" />}
+              >
+                Dashboard
+              </MenuItem>
+
+              <MenuItem
+                active={isActive('/monitor')}
+                icon={<MonitorIcon />}
+              >
+                Monitor
+              </MenuItem>
+
+              <MenuItem
+                active={isActive('/dashboard/flow')}
+                icon={<DesainIcon />}
+                component={<Link to="/dashboard/flow" />}
+              >
+                Design
               </MenuItem>
             </SubMenu>
 
