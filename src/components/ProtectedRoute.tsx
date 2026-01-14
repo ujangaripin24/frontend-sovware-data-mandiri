@@ -3,14 +3,9 @@ import { useAuthStore } from "../modules/auth/auth.store";
 import type { JSX } from "react";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated, token, logout } = useAuthStore();
+  const { isAuthenticated, token } = useAuthStore();
 
   if (!token || !isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
-
-  if (Date.now() > token.expiresAt) {
-    logout();
     return <Navigate to="/" replace />;
   }
 

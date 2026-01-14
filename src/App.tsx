@@ -20,9 +20,7 @@ function App() {
   if (showSplash) {
     return <SplashScreen />;
   }
-  if (showSplash) {
-    return <SplashScreen />;
-  }
+
   return (
     <BrowserRouter>
       <Routes>
@@ -42,5 +40,6 @@ function App() {
     </BrowserRouter>
   );
 }
+
 
 export default App;

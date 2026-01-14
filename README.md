@@ -13,6 +13,7 @@ Tambahan
 * React (Build by Vite)
 * React-router-dom
 * React-Pro-Sidebar
+* Embla-Carousel-Autoplay
 Struktur Folder
 * Based DDD (domain driven design)
 * Per-Modular (dibuat terisolasi)

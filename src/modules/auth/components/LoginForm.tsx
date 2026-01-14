@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { useAuthStore } from '../auth.store';
 import { useSplashStore } from '../../../hooks/splash.hook';
-import { useNavigate } from 'react-router-dom';
 import { Button, Checkbox, Form, Input, Modal, ModalBody, ModalContent, ModalFooter } from '@heroui/react';
 import { AlertDanger, EyeFilledIcon, EyeSlashFilledIcon } from '../../../components/Icons';
+import { Navigate } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const [isErrorOpen, setIsErrorOpen] = useState(false);
-  const navigate = useNavigate();
   const login = useAuthStore((s) => s.login);
   const startSplash = useSplashStore((s) => s.startSplash);
   const isLoading = useAuthStore((s) => s.isLoading);
@@ -23,6 +23,9 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setFieldErrors({});
+    setIsErrorOpen(false);
+
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -31,9 +34,6 @@ const LoginForm: React.FC = () => {
 
     if (success) {
       startSplash();
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 5000);
     } else {
       setFieldErrors({
         email: "Email atau password salah",
@@ -41,7 +41,10 @@ const LoginForm: React.FC = () => {
       });
       setIsErrorOpen(true);
     }
+  }
 
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
   }
   return (
     <>
