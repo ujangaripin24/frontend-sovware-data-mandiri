@@ -9,6 +9,7 @@ import {
   SubMenu,
 } from 'react-pro-sidebar'
 import { EyeFilledIcon, MenuIcon, MonitorIcon, UserIcon } from './Icons';
+import { Link } from 'react-router-dom';
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -62,7 +63,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             <SubMenu defaultOpen label="Dashboard">
               <MenuItem icon={<MonitorIcon/>}> Dashboard </MenuItem>
               <MenuItem icon={<MonitorIcon/>}> Monitor </MenuItem>
-              <MenuItem icon={<MonitorIcon/>}> Design </MenuItem>
+              <MenuItem icon={<MonitorIcon/>}>
+                <Link to={'/dashboard/flow'}>Design</Link>
+              </MenuItem>
             </SubMenu>
 
             <SubMenu defaultOpen label="Management">

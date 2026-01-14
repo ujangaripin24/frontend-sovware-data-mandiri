@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useSplashStore } from "./hooks/splash.hook";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
+import DashboardPage from "./modules/dashboard/dashboard.page";
 
 function App() {
   const checkToken = useAuthStore((s) => s.checkToken);
@@ -24,21 +25,20 @@ function App() {
   }
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
-        <Routes>
-          <Route path="/" element={<AuthPage />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <FlowPage />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<AuthPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<DashboardPage />} />
+          <Route path="flow" element={<FlowPage />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }

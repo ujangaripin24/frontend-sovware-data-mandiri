@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
-import Header from './Header'
-import SidebarComponent from './Sidebar';
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
+import Header from "./Header";
+import SidebarComponent from "./Sidebar";
 
-const Layout: React.FC<Readonly<{ children: React.ReactNode }>> = ({
-  children
-}: Readonly<{ children: React.ReactNode }>) => {
+const Layout: React.FC = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+
   const toggleSidebar = () => {
-    setSidebarOpen((prev) => !prev)
-    console.log("triger dari layout dashboard", isSidebarOpen);
-  }
+    setSidebarOpen((prev) => !prev);
+    console.log("trigger dari layout dashboard", isSidebarOpen);
+  };
+
   return (
     <div
       className="layout-container"
@@ -19,9 +20,15 @@ const Layout: React.FC<Readonly<{ children: React.ReactNode }>> = ({
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setSidebarOpen}
       />
+
       <div
         className="main-content"
-        style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        }}
       >
         <Header toggleSidebar={toggleSidebar} />
 
@@ -29,13 +36,11 @@ const Layout: React.FC<Readonly<{ children: React.ReactNode }>> = ({
           className="content-container px-4"
           style={{ flex: 1, overflowY: "auto" }}
         >
-          <div>
-            {children}
-          </div>
+          <Outlet />
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;
