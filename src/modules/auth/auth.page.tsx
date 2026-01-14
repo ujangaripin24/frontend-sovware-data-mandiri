@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Image, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/react'
+import { Button, Checkbox, Form, Image, Input, Modal, ModalBody, ModalContent, ModalFooter } from '@heroui/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import Logo from "../../assets/assets-s2re.svg"
 import { AlertDanger, EyeFilledIcon, EyeSlashFilledIcon } from '../../components/Icons'
@@ -8,7 +8,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from './auth.store'
-import { useSplashStore } from './auth.type'
+import { useSplashStore } from '../../hooks/splash.hook'
 
 const IMAGES = [
   Image1,

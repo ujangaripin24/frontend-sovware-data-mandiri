@@ -1,13 +1,23 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthPage from "./modules/auth/auth.page";
 import FlowPage from "./modules/flow/flow.page";
-import { useSplashStore } from "./modules/auth/auth.type";
 import SplashScreen from "./components/SplashScreen";
-import ProtectedRoute from "./components/ProtectedRoute";
+import { useAuthStore } from "./modules/auth/auth.store";
+import { useEffect } from "react";
+import { useSplashStore } from "./hooks/splash.hook";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 function App() {
+  const checkToken = useAuthStore((s) => s.checkToken);
   const showSplash = useSplashStore((s) => s.showSplash);
 
+  useEffect(() => {
+    checkToken();
+  }, [checkToken]);
+
+  if (showSplash) {
+    return <SplashScreen />;
+  }
   if (showSplash) {
     return <SplashScreen />;
   }
