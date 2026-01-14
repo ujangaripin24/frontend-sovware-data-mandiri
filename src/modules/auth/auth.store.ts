@@ -29,7 +29,7 @@ export const useAuthStore = create<AuthState>()(
         if (email === "admin@test.com" && password === "123456") {
           const token: AuthToken = {
             token: crypto.randomUUID(),
-            expiresAt: Date.now() + 60 * 60 * 1000, // 1 jam
+            expiresAt: Date.now() + 60 * 60 * 1000,
           };
 
           set({
