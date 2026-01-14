@@ -7,7 +7,7 @@ import { Navigate } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberEmail] = useState(false);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -49,7 +49,7 @@ const LoginForm: React.FC = () => {
     const savedEmail = localStorage.getItem("remembered_email");
     if (savedEmail) {
       setEmail(savedEmail);
-      setRememberMe(true);
+      setRememberEmail(true);
     }
   }, []);
 
@@ -102,8 +102,8 @@ const LoginForm: React.FC = () => {
         />
 
         <Checkbox
-          isSelected={rememberMe}
-          onValueChange={setRememberM}
+          isSelected={rememberme}
+          onValueChange={setRememberEmail}
         >
           Remember me
         </Checkbox>
