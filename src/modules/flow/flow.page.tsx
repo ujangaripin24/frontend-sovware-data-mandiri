@@ -15,6 +15,15 @@ const FlowPage: React.FC = () => {
         >
           Processor
         </div>
+        <div
+          draggable
+          onDragStart={(e) =>
+            e.dataTransfer.setData("application/reactflow", "network")
+          }
+          className="p-2 border rounded cursor-grab bg-white"
+        >
+          Network
+        </div>
       </div>
 
       <div className="flex-1">

@@ -17,16 +17,24 @@ export const useFlowStore = create<FlowState>((set, get) => ({
   selectedEdgeId: undefined,
 
   addProcessorAtPosition: (x, y) =>
-    set((state) => ({
-      nodes: [
-        ...state.nodes,
-        {
-          id: uuid(),
-          position: { x, y },
-          data: { label: "Processor" },
-        },
-      ],
-    })),
+    set((state) => {
+      console.log("tambah prosesor di", x, y);
+      return {
+        nodes: [
+          ...state.nodes,
+          {
+            id: uuid(),
+            position: { x, y },
+            data: { label: "Processor" },
+          },
+          {
+            id: uuid(),
+            position: { x, y },
+            data: { label: "Network" },
+          },
+        ],
+      };
+    }),
 
   onNodesChange: (changes) =>
     set((state) => ({
@@ -40,7 +48,7 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 
   onConnect: (connection) =>
     set((state) => {
-      // ❌ Prevent self connection
+      console.log("buat koneksi", connection.source, "->", connection.target)
       if (connection.source === connection.target) {
         return state;
       }
@@ -65,6 +73,7 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 
   deleteSelected: () =>
     set((state) => {
+      console.log("hapus Edge ID: " + state.selectedEdgeId + "hapus Node ID: " + state.selectedNodeId);
       if (state.selectedEdgeId) {
         return {
           edges: state.edges.filter((e) => e.id !== state.selectedEdgeId),
