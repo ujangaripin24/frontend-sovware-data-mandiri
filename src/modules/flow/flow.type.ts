@@ -14,4 +14,13 @@ export type FlowState = {
   setSelectedNode: (id?: string) => void;
   setSelectedEdge: (id?: string) => void;
   deleteSelected: () => void;
+
+  publishDesign: () => {
+    success: boolean;
+    message: string;
+    payload?: {
+      nodes: Node[];
+      connections: Edge[];
+    };
+  }
 };

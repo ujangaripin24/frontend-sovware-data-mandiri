@@ -27,10 +27,10 @@ Struktur Folder
 * Test Case 2.2 – Move Processor on Canvas [done]
 * Test Case 2.3 – Delete Processor [done]
 ### 3. Connection Processor (Connect Nodes Like NiFi)
-* Test Case 3.1 – Create Connection Between Two Processors [develop]
-* Test Case 3.2 – Invalid Connection Attempt [develop]
-* Test Case 3.3 – Delete Connection [develop]
+* Test Case 3.1 – Create Connection Between Two Processors [done]
+* Test Case 3.2 – Invalid Connection Attempt [done]
+* Test Case 3.3 – Delete Connection [done]
 ### 4. Publish Design
-* Test Case 4.1 – Successful Publish Flow [develop]
-* Test Case 4.2 – Publish Validation Error [develop]
-* Test Case 4.3 – Publish Without Any Processor [develop]
+* Test Case 4.1 – Successful Publish Flow [done]
+* Test Case 4.2 – Publish Validation Error [done]
+* Test Case 4.3 – Publish Without Any Processor [done]

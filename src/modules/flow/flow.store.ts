@@ -3,9 +3,6 @@ import {
   applyNodeChanges,
   applyEdgeChanges,
   addEdge,
-  type Node,
-  type Edge,
-  type Connection,
 } from "reactflow";
 import { v4 as uuid } from "uuid";
 import type { FlowState } from "./flow.type";
@@ -26,11 +23,6 @@ export const useFlowStore = create<FlowState>((set, get) => ({
             id: uuid(),
             position: { x, y },
             data: { label: "Processor" },
-          },
-          {
-            id: uuid(),
-            position: { x, y },
-            data: { label: "Network" },
           },
         ],
       };
@@ -95,4 +87,51 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 
       return state;
     }),
+
+  publishDesign: () => {
+    const { nodes, edges } = get();
+
+    if (nodes.length === 0) {
+      return {
+        success: false,
+        message: "Canvas is empty. Nothing to publish."
+      }
+    }
+
+    if (edges.length === 0) {
+      return {
+        success: false,
+        message: "Please check your design. Some processors are not connected."
+      }
+    }
+
+    const connectiodNodeIds = new Set<string>();
+    edges.forEach((e: any) => {
+      connectiodNodeIds.add(e.source);
+      connectiodNodeIds.add(e.target);
+    });
+
+    const hasUnconnectedNode = nodes.some(
+      (n: any) => !connectiodNodeIds.has(n.id)
+    );
+
+    if (hasUnconnectedNode) {
+      return {
+        success: false,
+        message: "Please check your design. Some processors are not connected.",
+      };
+    }
+    const payload = {
+      nodes,
+      connections: edges,
+    };
+
+    console.log("PUBLISH DESIGN PAYLOAD", payload);
+
+    return {
+      success: true,
+      message: "Design published successfully",
+      payload,
+    };
+  }
 }));
