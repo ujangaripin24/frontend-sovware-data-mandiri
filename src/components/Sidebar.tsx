@@ -8,7 +8,7 @@ import {
   sidebarClasses,
   SubMenu,
 } from 'react-pro-sidebar'
-import { EyeFilledIcon, MenuIcon, MonitorIcon, UserIcon } from './Icons';
+import { MonitorIcon, UserIcon } from './Icons';
 import { Link } from 'react-router-dom';
 
 interface SidebarProps {
