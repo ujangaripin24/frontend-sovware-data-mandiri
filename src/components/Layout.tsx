@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import Header from './Header'
 import SidebarComponent from './Sidebar';
-import './Layout.css'
 
 const Layout: React.FC<Readonly<{ children: React.ReactNode }>> = ({
   children
@@ -22,14 +21,15 @@ const Layout: React.FC<Readonly<{ children: React.ReactNode }>> = ({
       />
       <div
         className="main-content"
-        style={{ flex: 1, display: "flex", flexDirection: "column" }}
+        style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}
       >
         <Header toggleSidebar={toggleSidebar} />
+
         <div
           className="content-container px-4"
           style={{ flex: 1, overflowY: "auto" }}
         >
-          <div className="mt-2" style={{ overflow: "hidden" }}>
+          <div>
             {children}
           </div>
         </div>
