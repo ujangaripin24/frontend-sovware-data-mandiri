@@ -1,20 +1,32 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthPage from "./modules/auth/auth.page";
 import FlowPage from "./modules/flow/flow.page";
-import { HeroUIProvider } from '@heroui/react';
+import { useSplashStore } from "./modules/auth/auth.type";
+import SplashScreen from "./components/SplashScreen";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
+  const showSplash = useSplashStore((s) => s.showSplash);
+
+  if (showSplash) {
+    return <SplashScreen />;
+  }
   return (
-    <HeroUIProvider>
-      <BrowserRouter>
-        <div className="min-h-screen bg-gray-50">
-          <Routes>
-            <Route path="/" element={<AuthPage />} />
-            <Route path="/flow" element={<FlowPage />} />
-          </Routes>
-        </div>
-      </BrowserRouter>
-    </HeroUIProvider>
+    <BrowserRouter>
+      <div className="min-h-screen bg-gray-50">
+        <Routes>
+          <Route path="/" element={<AuthPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <FlowPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 

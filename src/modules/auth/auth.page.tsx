@@ -6,6 +6,9 @@ import Image1 from './../../assets/carousel/carousel-1.png'
 import type { EmblaCarouselType } from "embla-carousel"
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
+import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from './auth.store'
+import { useSplashStore } from './auth.type'
 
 const IMAGES = [
   Image1,
@@ -19,12 +22,34 @@ const AuthPage: React.FC = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({ delay: 3000, stopOnInteraction: false })
   ]);
-
   const [selectedIndex, setSelectedIndex] = useState(0);
-
   const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, []);
+  const navigate = useNavigate()
+  const login = useAuthStore((s) => s.login)
+  const isLoading = useAuthStore((s) => s.isLoading)
+  const err = useAuthStore((s) => s.error);
+  const startSplash = useSplashStore((s) => s.startSplash);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    const success = await login(email, password);
+
+    if (success) {
+      startSplash();
+
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 5000);
+    }
+
+
+  }
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -46,6 +71,7 @@ const AuthPage: React.FC = () => {
           </div>
           <Form
             className="w-full max-w-xs flex flex-col gap-4"
+            onSubmit={handleSubmit}
           >
             <Input
               isRequired

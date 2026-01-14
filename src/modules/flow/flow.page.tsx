@@ -1,8 +1,14 @@
 import React from 'react'
+import SplashScreen from '../../components/SplashScreen'
 
 const FlowPage: React.FC = () => {
   return (
-    <div>FlowPage</div>
+    <div>
+      <div>FlowPage</div>
+      <div>
+        <SplashScreen/>
+      </div>
+    </div>
   )
 }
 
