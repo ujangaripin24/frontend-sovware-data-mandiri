@@ -1,55 +1,71 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import ReactFlow, {
   Background,
   Controls,
+  type Connection,
+  type ReactFlowInstance,
 } from "reactflow";
 import "reactflow/dist/style.css";
 
 import { useFlowStore } from "../flow.store";
 
 const FlowCanvas: React.FC = () => {
-  const nodes = useFlowStore((s) => s.nodes);
-  const edges = useFlowStore((s) => s.edges);
-  const onNodesChange = useFlowStore((s) => s.onNodesChange);
-  const onEdgesChange = useFlowStore((s) => s.onEdgesChange);
-  const addProcessorAtPosition = useFlowStore(
-    (s) => s.addProcessorAtPosition
+  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
+
+  const {
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+    setSelectedNode,
+    setSelectedEdge,
+    deleteSelected,
+    addProcessorAtPosition,
+  } = useFlowStore();
+
+  const isValidConnection = useCallback(
+    (connection: Connection) => {
+      return connection.source !== connection.target;
+    },
+    []
   );
-  const setSelectedNode = useFlowStore((s) => s.setSelectedNode);
-  const deleteSelectedNode = useFlowStore((s) => s.deleteSelectedNode);
+
+  const onDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffec = "move";
+  }, []);
 
   const onDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
 
       const type = event.dataTransfer.getData("application/reactflow");
-      if (!type) return;
+      if (!type || !reactFlowWrapper.current || !reactFlowInstance.current) {
+        return;
+      }
 
-      const bounds = event.currentTarget.getBoundingClientRect();
-
-      const position = {
+      const bounds = reactFlowWrapper.current.getBoundingClientRect();
+      const position = reactFlowInstance.current.screenToFlowPosition({
         x: event.clientX - bounds.left,
         y: event.clientY - bounds.top,
-      };
+      });
 
       addProcessorAtPosition(position.x, position.y);
     },
     [addProcessorAtPosition]
   );
 
-  const onDragOver = (event: React.DragEvent) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
-  };
-
   const onKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Delete") {
-      deleteSelectedNode();
+      deleteSelected();
     }
   };
 
   return (
     <div
+      ref={reactFlowWrapper}
       style={{ height: "100%", width: "100%" }}
       tabIndex={0}
       onKeyDown={onKeyDown}
@@ -57,11 +73,15 @@ const FlowCanvas: React.FC = () => {
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        onInit={(instance) => (reactFlowInstance.current = instance)}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        isValidConnection={isValidConnection}
+        onNodeClick={(_, node) => setSelectedNode(node.id)}
+        onEdgeClick={(_, edge) => setSelectedEdge(edge.id)}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        onNodeClick={(_, node) => setSelectedNode(node.id)}
         fitView
       >
         <Background />
