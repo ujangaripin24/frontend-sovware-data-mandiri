@@ -34,7 +34,7 @@ const FlowCanvas: React.FC = () => {
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
-    event.dataTransfer.dropEffec = "move";
+    event.dataTransfer.dropEffect = "move";
   }, []);
 
   const onDrop = useCallback(
