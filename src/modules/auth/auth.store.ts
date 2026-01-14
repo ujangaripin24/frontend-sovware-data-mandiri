@@ -54,6 +54,7 @@ export const useAuthStore = create<AuthState>()(
 
       clearTokenExpired: () => {
         set({ isTokenExpired: false });
+        console.log("User force logout");
       },
 
       logout: () => {
@@ -75,6 +76,7 @@ export const useAuthStore = create<AuthState>()(
           set({
             token: null,
             isAuthenticated: false,
+            isTokenExpired: true,
           });
         } else {
           set({ isAuthenticated: true });

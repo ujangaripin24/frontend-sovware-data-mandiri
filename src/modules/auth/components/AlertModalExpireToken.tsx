@@ -13,6 +13,8 @@ const AlertModalExpireToken: React.FC = () => {
     logout();
     navigate("/", { replace: true });
   };
+  console.log("Trigger page");
+  
   return (
     <>
       <Modal isOpen={isTokenExpired} backdrop="blur" placement="center">

@@ -59,7 +59,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
           </div>
         </div>
 
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1 }} className='text-black'>
           <Menu
             menuItemStyles={{
               button: ({ active }) => ({

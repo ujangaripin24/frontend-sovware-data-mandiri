@@ -1,7 +1,8 @@
-import { BreadcrumbItem, Breadcrumbs, Button, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react'
+import { BreadcrumbItem, Breadcrumbs, Button, Navbar, NavbarContent, NavbarItem } from '@heroui/react'
 import React from 'react'
 import { MenuIcon } from './Icons'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
+
 interface NavigationBarProps {
   toggleSidebar: () => void
 }
@@ -9,13 +10,22 @@ interface NavigationBarProps {
 const Header: React.FC<NavigationBarProps> = ({ toggleSidebar }) => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
+
   return (
-    <Navbar position="static" isBordered className='bg-white'>
-      <NavbarContent justify="start">
+    <Navbar
+      position="static"
+      isBordered
+      className='bg-white'
+      maxWidth="full"
+      classNames={{
+        wrapper: "px-2 justify-start gap-2",
+      }}
+    >
+      <NavbarContent className="gap-2" justify="start">
         <NavbarItem>
           <Button
             onPress={toggleSidebar}
-            variant="ghost"
+            variant="light"
             isIconOnly
             size="sm"
           >
@@ -23,17 +33,16 @@ const Header: React.FC<NavigationBarProps> = ({ toggleSidebar }) => {
           </Button>
         </NavbarItem>
         <NavbarItem>
-          <Breadcrumbs>
-            <BreadcrumbItem>
-              <Link to="/dashboard">Home</Link>
+          <Breadcrumbs size="sm">
+            <BreadcrumbItem key="home">
+              <Link to="/">Home</Link>
             </BreadcrumbItem>
             {pathnames.map((value, index) => {
-              const last = index === pathnames.length - 1;
               const to = `/${pathnames.slice(0, index + 1).join("/")}`;
-
+              const isLast = index === pathnames.length - 1;
               return (
-                <BreadcrumbItem key={to} isCurrent={last}>
-                  <Link to={to} style={{ textTransform: 'capitalize' }}>
+                <BreadcrumbItem key={to} isCurrent={isLast}>
+                  <Link to={to} className="capitalize">
                     {value.replace(/-/g, " ")}
                   </Link>
                 </BreadcrumbItem>
