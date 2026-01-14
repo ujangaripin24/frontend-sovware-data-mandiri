@@ -6,6 +6,7 @@ import { useAuthStore } from "./modules/auth/auth.store";
 import { useEffect } from "react";
 import { useSplashStore } from "./hooks/splash.hook";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import Layout from "./components/Layout";
 
 function App() {
   const checkToken = useAuthStore((s) => s.checkToken);
@@ -30,7 +31,9 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <FlowPage />
+                <Layout>
+                  <FlowPage />
+                </Layout>
               </ProtectedRoute>
             }
           />

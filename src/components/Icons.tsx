@@ -76,3 +76,27 @@ export const AlertDanger = (props: React.JSX.IntrinsicAttributes & React.SVGProp
     </svg>
   )
 }
+
+export const MenuIcon = (props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      focusable="false"
+      height="1em"
+      role="presentation"
+      viewBox="0 0 24 24"
+      width="1em"
+      {...props}
+    >
+      <path
+        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+      />
+    </svg>
+  );
+};
+
