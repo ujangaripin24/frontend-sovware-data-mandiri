@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuthStore } from '../auth.store';
 import { useSplashStore } from '../../../hooks/splash.hook';
 import { Button, Checkbox, Form, Input, Modal, ModalBody, ModalContent, ModalFooter } from '@heroui/react';
@@ -6,6 +6,8 @@ import { AlertDanger, EyeFilledIcon, EyeSlashFilledIcon } from '../../../compone
 import { Navigate } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -43,6 +45,14 @@ const LoginForm: React.FC = () => {
     }
   }
 
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("remembered_email");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+    }
+  }, []);
+
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -59,6 +69,8 @@ const LoginForm: React.FC = () => {
           placeholder='email'
           type='email'
           variant='bordered'
+          value={email}
+          onValueChange={setEmail}
           isInvalid={!!fieldErrors.email}
           errorMessage={fieldErrors.email}
           onChange={() => clearFieldError('email')}
@@ -89,7 +101,12 @@ const LoginForm: React.FC = () => {
           }
         />
 
-        <Checkbox>Remember me</Checkbox>
+        <Checkbox
+          isSelected={rememberMe}
+          onValueChange={setRememberM}
+        >
+          Remember me
+        </Checkbox>
         <Button
           type="submit"
           isLoading={isLoading}
