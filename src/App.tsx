@@ -9,6 +9,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
 import DashboardPage from "./modules/dashboard/dashboard.page";
 import AlertModalExpireToken from "./modules/auth/components/AlertModalExpireToken";
+import DesignClassPage from "./modules/design/design-class.page";
 
 function App() {
   const checkToken = useAuthStore((s) => s.checkToken);
@@ -40,6 +41,7 @@ function App() {
           >
             <Route index element={<DashboardPage />} />
             <Route path="flow" element={<FlowPage />} />
+            <Route path="design" element={<DesignClassPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
