@@ -9,8 +9,10 @@ import {
   Card,
   CardBody,
   Code,
+  ModalHeader,
+  addToast,
 } from "@heroui/react";
-import { ProcessorIcon } from '../../../components/Icons';
+import { ChecklistIcon, ProcessorIcon, WarningtIcon } from '../../../components/Icons';
 import { useFlowStore } from '../flow.store';
 import RelationNameModal from './RelationModalName';
 
@@ -39,13 +41,24 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
   } = useFlowStore();
 
   const handlePublish = () => {
-    const result = publishDesign()
-    alert(result.message)
-    if (result.success) {
-      window.location.reload()
-    }
+    const result = publishDesign();
     setPublishModal(false);
-  }
+
+    addToast({
+      title: result.success ? "Design Flow Published" : "Publish Failed",
+      description: result.message,
+      variant: "flat",
+      color: result.success ? "success" : "danger",
+      timeout: 3000,
+      shouldShowTimeoutProgress: true,
+      icon: result.success ? <ChecklistIcon /> : <WarningtIcon />,
+      onClose: () => {
+        if (result.success) {
+          window.location.reload();
+        }
+      }
+    });
+  };
 
   useEffect(() => {
     loadProcessors()
@@ -159,9 +172,9 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
                         : "bg-amber-400 text-white"
                     }
                   >
+                    {designStatus === "VALIDATED" ? <ChecklistIcon /> : <WarningtIcon />}
                     {designStatus === "VALIDATED" ? "Validated" : "Not Validated"}
                   </Button>
-
                 </div>
               </div>
             </CardBody>
@@ -176,18 +189,37 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
           </div>
 
           <ModalFooter>
-            <Button
-              color={designStatus === "VALIDATED" ? "primary" : "warning"}
-              onClick={() => {
-                if (designStatus === "NOT_VALIDATED") {
-                  validateDesign();
-                } else {
-                  handlePublish();
-                }
-              }}
-            >
-              {designStatus === "NOT_VALIDATED" ? "Validate" : "Publish"}
-            </Button>
+            {designStatus === "NOT_VALIDATED" ? (
+              <>
+                <Button className='bg-[#fff] text-red-600'
+                  onClick={() => {
+                    onOpenChange()
+                  }}
+                >
+                  Close
+                </Button>
+                <Button
+                  className='bg-[#2D68A2] text-white'
+                  onClick={() => {
+                    if (designStatus === "NOT_VALIDATED") {
+                      validateDesign();
+                    } else {
+                      handlePublish();
+                    }
+                  }}
+                >
+                  <ChecklistIcon />
+                  Validate
+                </Button>
+              </>
+            ) : (<>
+              <Button
+                className='w-full bg-[#2D68A2] text-white'
+                onClick={() => setPublishModal(true)}
+              >
+                Publish
+              </Button>
+            </>)}
           </ModalFooter>
         </>);
       default:
@@ -231,7 +263,10 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
 
       <Modal isOpen={openPublishModal} onClose={() => setPublishModal(false)}>
         <ModalContent className="p-4">
-          <p>Are you sure you want to publish this design?</p>
+          <ModalHeader>Publish Design Confirmation</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to publish this design?</p>
+          </ModalBody>
 
           <div className="flex justify-end gap-2 mt-4">
             <Button variant="light" onClick={() => setPublishModal(false)}>
