@@ -12,7 +12,7 @@ import {
 } from "@heroui/react";
 import { ProcessorIcon } from '../../../components/Icons';
 import { useFlowStore } from '../flow.store';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import RelationNameModal from './RelationModalName';
 
 interface PanelCanvasModalProps {
