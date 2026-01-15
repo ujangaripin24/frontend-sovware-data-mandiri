@@ -25,7 +25,7 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
   const [openPublishModal, setPublishModal] = useState(false);
   const pendingConnection = useFlowStore((s) => s.pendingConnection);
   const openRelationModal = Boolean(pendingConnection)
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const {
     loadProcessors,
     setCategory,
