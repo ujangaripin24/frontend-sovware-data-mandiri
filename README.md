@@ -5,11 +5,11 @@
 ## Tech Stack Requirements
 Bahasa
 * TypeScript
-Wajib
-* HeroUI
+Depedensi Wajib
+* HeroUI (UI)
 * Zustand (State Management)
 * React Flow
-Tambahan
+Depedensi Tambahan
 * React (Build by Vite)
 * React-router-dom
 * React-Pro-Sidebar
@@ -18,6 +18,22 @@ Tambahan
 Struktur Folder
 * Based DDD (domain driven design)
 * Per-Modular (dibuat terisolasi)
+
+## Cara Install
+* Clone repository 
+```
+https://github.com/ujangaripin24/frontend-sovware-data-mandiri
+```
+* Masuk ke folder frontend-sovware-data-mandiri
+* Install pada terminal menggunakan perintah dibawah (Pastikan Node versi v20.19.4 LTS)
+```
+npm install
+```
+* Jalankan program dengan perintah
+```
+npm run dev
+```
+* Kunjungi dibrowser 'http://localhost:5173/
 
 ## Task
 ### 1. Authentication
