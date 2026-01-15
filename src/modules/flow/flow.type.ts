@@ -15,6 +15,15 @@ export type FlowState = {
   setSelectedEdge: (id?: string) => void;
   deleteSelected: () => void;
 
+  processors: ProcessorDef[];
+  selectedCategory: string;
+
+  loadProcessors: () => void;
+  setCategory: (cat: string) => void;
+  getFilteredProcessors: () => ProcessorDef[];
+
+  addProcessorToCanvas: (proc: ProcessorDef, x?: number, y?: number) => void;
+
   publishDesign: () => {
     success: boolean;
     message: string;
@@ -24,3 +33,10 @@ export type FlowState = {
     };
   }
 };
+
+export type ProcessorDef = {
+  id: number;
+  name: string;
+  desc: string;
+  category: string;
+}

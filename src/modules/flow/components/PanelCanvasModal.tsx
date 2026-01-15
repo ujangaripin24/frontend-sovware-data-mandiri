@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-  Modal, 
-  ModalContent, 
-  ModalHeader, 
-  ModalBody, 
-  ModalFooter, 
-  Button
+  Modal,
+  ModalContent,
+  ModalBody,
+  ModalFooter,
+  Button,
+  ScrollShadow
 } from "@heroui/react";
+import { ProcessorIcon } from '../../../components/Icons';
+import { useFlowStore } from '../flow.store';
 
 interface PanelCanvasModalProps {
   isOpen: boolean;
@@ -15,44 +17,76 @@ interface PanelCanvasModalProps {
 }
 
 const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChange, type }) => {
-  
+  const { loadProcessors, setCategory, getFilteredProcessors, addProcessorToCanvas } = useFlowStore();
+  useEffect(() => {
+    loadProcessors()
+  }, []);
   const renderContent = () => {
     switch (type) {
       case "Parameter":
-        return <p>Konfigurasi Parameter Sistem di sini.</p>;
+        return <p>test 1</p>;
       case "Funnel":
-        return <p>Pengaturan alur data (Funneling).</p>;
+        return <p>test 2</p>;
       case "Processor":
-        return <p>List komponen Processor yang tersedia.</p>;
+        return (<>
+          <div className="flex flex-row w-full">
+            <div className="w-1/4 bg-gray-50/50 p-4 flex flex-col gap-2">
+              <Button onClick={() => setCategory("All")}>All</Button>
+              <Button onClick={() => setCategory("Standart")}>
+                <ProcessorIcon />
+                <span>Processor Standard</span>
+              </Button>
+              <Button onClick={() => setCategory("SQL")}>
+                <ProcessorIcon />
+                <span>Processor SQL</span>
+              </Button>
+            </div>
+
+            <div className="w-3/4 flex flex-col">
+              <ScrollShadow className="p-6">
+                <div className="grid grid-cols-2 gap-4">
+                  {getFilteredProcessors().map((proc) => (
+                    <div
+                      key={proc.id}
+                      className="flex items-start gap-3 p-4 border rounded-xl cursor-pointer"
+                      onClick={() => addProcessorToCanvas(proc)}
+                    >
+                      <ProcessorIcon />
+                      <div>
+                        <p className="font-bold text-sm">{proc.name}</p>
+                        <p className="text-xs text-gray-400">{proc.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollShadow>
+            </div>
+          </div>
+        </>);
       case "Publish":
-        return <p>Apakah Anda yakin ingin mempublish desain ini?</p>;
+        return <p>test 3</p>;
       default:
-        return <p>Detail informasi untuk {type}.</p>;
+        return <p>test 4</p>;
     }
   };
 
   return (
-    <Modal 
-      isOpen={isOpen} 
+    <Modal
+      isOpen={isOpen}
       onOpenChange={onOpenChange}
       backdrop="blur"
       placement="center"
+      size='5xl'
     >
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1 border-b">
-              {type} Configuration
-            </ModalHeader>
             <ModalBody className="py-6">
               {renderContent()}
             </ModalBody>
-            <ModalFooter className="border-t">
-              <Button color="danger" variant="light" onPress={onClose}>
-                Close
-              </Button>
+            <ModalFooter>
               <Button className="bg-[#2D68A2] text-white" onPress={onClose}>
-                Save Changes
+                Add
               </Button>
             </ModalFooter>
           </>

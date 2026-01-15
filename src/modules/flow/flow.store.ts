@@ -12,6 +12,44 @@ export const useFlowStore = create<FlowState>((set, get) => ({
   edges: [],
   selectedNodeId: undefined,
   selectedEdgeId: undefined,
+  processors: [],
+  selectedCategory: "All",
+
+  loadProcessors: () => {
+    set({
+      processors: [
+        { id: 1, name: "AppendHostInfo", desc: "Appends host information", category: "Standart" },
+        { id: 2, name: "AttributesToJSON", desc: "Generates JSON", category: "Standart" },
+        { id: 3, name: "FetchFile", desc: "Reads file content", category: "Standart" },
+        { id: 4, name: "QueryDatabase", desc: "Run SQL query", category: "SQL" },
+      ],
+    });
+  },
+
+  setCategory: (cat: any) => set({ selectedCategory: cat }),
+
+  getFilteredProcessors: () => {
+    const { processors, selectedCategory } = get();
+
+    if (selectedCategory === "All") return processors;
+
+    return processors.filter((p: { category: any; }) => p.category === selectedCategory);
+  },
+
+  addProcessorToCanvas: (proc: { name: any; }, x = 100, y = 100) => {
+    set((state) => ({
+      nodes: [
+        ...state.nodes,
+        {
+          id: crypto.randomUUID(),
+          position: { x, y },
+          data: { label: proc.name },
+        },
+      ],
+    }));
+
+    console.log("ADD PROCESSOR:", proc.name);
+  },
 
   addProcessorAtPosition: (x, y) =>
     set((state) => {
