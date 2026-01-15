@@ -33,7 +33,28 @@ npm install
 ```
 npm run dev
 ```
-* Kunjungi dibrowser 'http://localhost:5173/
+* Kunjungi dibrowser 'http://localhost:5173/'
+
+## Cara Pakai
+### Autentikasi
+* Masuk ke 'http://localhost:5173/' dengan google chrome
+* login menggunakan email dan password
+```
+email: admin@test.com
+password: 123456
+```
+* *Jika gagal akan menampilkan pesan Alert*.
+* Setelah berhasil login maka akan menampilkan SplashScreen kemudian diarahkan ke halaman Dashboard .
+
+### Menggunakan Desain Diagram Flow
+* Masuk ke menu Design (Dibagian Sidebar).
+* [Anggap Saja] Sudah tersedia beberapa data Class pilih terlebih dahulu Class yang akan dipakai setelah pilih kemudian klik 'Open Class'.
+* Maka akan muncul modal yang menampilkan daftar data  Flow yang [Anggap Saja] sudah tersedia.
+* Pilih salah satu Flow yang akan dibuat Pemrosesan alur diagram.
+* Maka akan muncul Canvas
+* Pada panel Canvas pilih 'PROCESSOR' (sebelah kanan icon CPU)
+* Pilih 1 atau 2 'Entity' yang akan dibuatkan 'Flow' kemudiah klik 'Add'
+
 
 ## Task
 ### 1. Authentication
