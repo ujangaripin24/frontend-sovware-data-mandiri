@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthPage from "./modules/auth/auth.page";
-import FlowPage from "./modules/flow/flow.page";
 import SplashScreen from "./components/SplashScreen";
 import { useAuthStore } from "./modules/auth/auth.store";
 import { useEffect } from "react";
@@ -40,7 +39,6 @@ function App() {
             }
           >
             <Route index element={<DashboardPage />} />
-            <Route path="flow" element={<FlowPage />} />
             <Route path="design" element={<DesignClassPage />} />
           </Route>
         </Routes>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Modal,
   ModalContent,
@@ -12,6 +12,7 @@ import {
 } from "@heroui/react";
 import { ProcessorIcon } from '../../../components/Icons';
 import { useFlowStore } from '../flow.store';
+import { useNavigate } from 'react-router-dom';
 
 interface PanelCanvasModalProps {
   isOpen: boolean;
@@ -20,6 +21,8 @@ interface PanelCanvasModalProps {
 }
 
 const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChange, type }) => {
+  const [openPublishModal, setPublishModal] = useState(false);
+  const navigate = useNavigate();
   const {
     loadProcessors,
     setCategory,
@@ -28,7 +31,19 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
     selectedProcessors,
     addSelectedProcessorsToCanvas,
     clearSelectedProcessors,
+    publishDesign,
   } = useFlowStore();
+
+  const handlePublish = () => {
+    const result = publishDesign()
+    alert(result.message)
+    if (result.success) {
+      navigate("/dashboard/design");
+    }
+    setPublishModal(false);
+    window.location.reload()
+  }
+
   useEffect(() => {
     loadProcessors()
   }, []);
@@ -147,6 +162,9 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
             >
               Tutup
             </Button>
+            <Button color="primary" onClick={() => setPublishModal(true)}>
+              Publish
+            </Button>
           </ModalFooter>
         </>);
       default:
@@ -165,27 +183,44 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onOpenChange={(open) => {
-        if (!open) onOpenChange()
-        clearSelectedProcessors()
-      }}
-      backdrop="blur"
-      placement="center"
-      isDismissable={false}
-      isKeyboardDismissDisabled={true}
-      size='5xl'
-      hideCloseButton
-    >
-      <ModalContent>
-        <>
-          <ModalBody className="py-6">
-            {renderContent()}
-          </ModalBody>
-        </>
-      </ModalContent>
-    </Modal>
+    <>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={(open) => {
+          if (!open) onOpenChange()
+          clearSelectedProcessors()
+        }}
+        backdrop="blur"
+        placement="center"
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        size='5xl'
+        hideCloseButton
+      >
+        <ModalContent>
+          <>
+            <ModalBody className="py-6">
+              {renderContent()}
+            </ModalBody>
+          </>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={openPublishModal} onClose={() => setPublishModal(false)}>
+        <ModalContent className="p-4">
+          <p>Are you sure you want to publish this design?</p>
+
+          <div className="flex justify-end gap-2 mt-4">
+            <Button variant="light" onClick={() => setPublishModal(false)}>
+              Cancel
+            </Button>
+            <Button color="primary" onClick={handlePublish}>
+              Confirm Publish
+            </Button>
+          </div>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 
