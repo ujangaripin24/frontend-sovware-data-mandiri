@@ -10,169 +10,141 @@ import type { FlowState } from "./flow.type";
 export const useFlowStore = create<FlowState>((set, get) => ({
   nodes: [],
   edges: [],
-  selectedNodeId: undefined,
-  selectedEdgeId: undefined,
+  connections: [],
+
   processors: [],
+  selectedProcessors: [],
+  selectedProcessor: undefined,
   selectedCategory: "All",
 
-  selectedProcessor: undefined,
+  selectedNodeId: undefined,
+  selectedEdgeId: undefined,
 
-  selectedProcessors: [],
+  pendingConnection: undefined,
+
+  designStatus: "NOT_VALIDATED",
+  generatedCode: "",
+
+  loadProcessors: () => {
+    set({
+      processors: [
+        { id: 1, name: "AppendHostInfo", desc: "Appends host information", category: "Standart" },
+        { id: 2, name: "AttributesToJSON", desc: "Generate JSON", category: "Standart" },
+        { id: 3, name: "FetchFile", desc: "Read file", category: "Standart" },
+        { id: 4, name: "QueryDatabase", desc: "Execute SQL", category: "SQL" },
+      ],
+    });
+  },
+
+  setCategory: (cat) => set({ selectedCategory: cat }),
+
+  getFilteredProcessors: () => {
+    const { processors, selectedCategory } = get();
+    if (selectedCategory === "All") return processors;
+    return processors.filter(p => p.category === selectedCategory);
+  },
 
   toggleProcessorSelection: (proc) => {
     const selected = get().selectedProcessors;
-    const exists = selected.some((p) => p.id === proc.id);
+    const exists = selected.some(p => p.id === proc.id);
 
-    if (exists) {
-      set({
-        selectedProcessors: selected.filter((p) => p.id !== proc.id),
-      });
-      console.log("UNSELECT:", proc.name);
-    } else {
-      set({
-        selectedProcessors: [...selected, proc],
-      });
-      console.log("SELECT:", proc.name);
-    }
+    set({
+      selectedProcessors: exists
+        ? selected.filter(p => p.id !== proc.id)
+        : [...selected, proc],
+    });
   },
 
-  clearSelectedProcessors: () => {
-    set({ selectedProcessors: [] });
-  },
+  clearSelectedProcessors: () => set({ selectedProcessors: [] }),
 
   addSelectedProcessorsToCanvas: () => {
     const processors = get().selectedProcessors;
-    if (processors.length === 0) return;
+    if (!processors.length) return;
 
-    set((state) => ({
+    set(state => ({
       nodes: [
         ...state.nodes,
-        ...processors.map((proc, index) => ({
-          id: crypto.randomUUID(),
-          position: {
-            x: 150 + index * 40,
-            y: 150 + index * 40,
-          },
-          data: { label: proc.name },
+        ...processors.map((p, i) => ({
+          id: uuid(),
+          position: { x: 150 + i * 40, y: 150 + i * 40 },
+          data: { label: p.name },
         })),
       ],
+      selectedProcessors: [],
+      designStatus: "NOT_VALIDATED",
     }));
-
-    console.log(
-      "ADD MULTIPLE:",
-      processors.map((p) => p.name)
-    );
-
-    set({ selectedProcessors: [] });
   },
 
-  selectProcessor: (proc: any) => {
-    set({ selectedProcessor: proc });
-    console.log("SELECT PROCESSOR:", proc.name);
-  },
-
-  clearSelectedProcessor: () => {
-    set({ selectedProcessor: undefined });
-  },
+  selectProcessor: (proc) => set({ selectedProcessor: proc }),
+  clearSelectedProcessor: () => set({ selectedProcessor: undefined }),
 
   addSelectedProcessorToCanvas: () => {
     const proc = get().selectedProcessor;
     if (!proc) return;
 
-    set((state) => ({
+    set(state => ({
       nodes: [
         ...state.nodes,
         {
-          id: crypto.randomUUID(),
+          id: uuid(),
           position: { x: 150, y: 150 },
           data: { label: proc.name },
         },
       ],
+      selectedProcessor: undefined,
+      designStatus: "NOT_VALIDATED",
     }));
-
-    console.log("ADD TO CANVAS:", proc.name);
-
-    set({ selectedProcessor: undefined });
   },
-  loadProcessors: () => {
-    set({
-      processors: [
-        { id: 1, name: "AppendHostInfo", desc: "Appends host information", category: "Standart" },
-        { id: 2, name: "AttributesToJSON", desc: "Generates JSON", category: "Standart" },
-        { id: 3, name: "FetchFile", desc: "Reads file content", category: "Standart" },
-        { id: 4, name: "QueryDatabase", desc: "Run SQL query", category: "SQL" },
-      ],
-    });
-  },
-
-  setCategory: (cat: any) => set({ selectedCategory: cat }),
-
-  getFilteredProcessors: () => {
-    const { processors, selectedCategory } = get();
-
-    if (selectedCategory === "All") return processors;
-
-    return processors.filter((p: { category: any; }) => p.category === selectedCategory);
-  },
-
-  addProcessorToCanvas: (proc: { name: any; }, x = 100, y = 100) => {
-    set((state) => ({
-      nodes: [
-        ...state.nodes,
-        {
-          id: crypto.randomUUID(),
-          position: { x, y },
-          data: { label: proc.name },
-        },
-      ],
-    }));
-
-    console.log("ADD PROCESSOR:", proc.name);
-  },
-
-  addProcessorAtPosition: (x, y) =>
-    set((state) => {
-      console.log("tambah prosesor di", x, y);
-      return {
-        nodes: [
-          ...state.nodes,
-          {
-            id: uuid(),
-            position: { x, y },
-            data: { label: "Processor" },
-          },
-        ],
-      };
-    }),
 
   onNodesChange: (changes) =>
-    set((state) => ({
+    set(state => ({
       nodes: applyNodeChanges(changes, state.nodes),
     })),
 
   onEdgesChange: (changes) =>
-    set((state) => ({
+    set(state => ({
       edges: applyEdgeChanges(changes, state.edges),
     })),
 
-  onConnect: (connection) =>
-    set((state) => {
-      console.log("buat koneksi", connection.source, "->", connection.target)
-      if (connection.source === connection.target) {
-        return state;
-      }
+  onConnect: (params) => {
+    if (!params.source || !params.target) return;
+    get().startConnect(params.source, params.target);
+  },
 
-      return {
-        edges: addEdge(
-          {
-            ...connection,
-            id: uuid(),
-            animated: false,
-          },
-          state.edges
-        ),
-      };
-    }),
+  startConnect: (sourceId, targetId) => {
+    set({
+      pendingConnection: { sourceId, targetId },
+    });
+  },
+
+  saveConnection: (relationName) => {
+    const { pendingConnection, edges, connections } = get();
+    if (!pendingConnection) return;
+
+    const id = uuid();
+
+    set({
+      connections: [
+        ...connections,
+        {
+          id,
+          sourceId: pendingConnection.sourceId,
+          targetId: pendingConnection.targetId,
+          relationName,
+        },
+      ],
+      edges: addEdge(
+        {
+          id,
+          source: pendingConnection.sourceId,
+          target: pendingConnection.targetId,
+        },
+        edges
+      ),
+      pendingConnection: undefined,
+      designStatus: "NOT_VALIDATED",
+    });
+  },
 
   setSelectedNode: (id) =>
     set({ selectedNodeId: id, selectedEdgeId: undefined }),
@@ -181,74 +153,82 @@ export const useFlowStore = create<FlowState>((set, get) => ({
     set({ selectedEdgeId: id, selectedNodeId: undefined }),
 
   deleteSelected: () =>
-    set((state) => {
-      console.log("hapus Edge ID: " + state.selectedEdgeId + "hapus Node ID: " + state.selectedNodeId);
+    set(state => {
       if (state.selectedEdgeId) {
         return {
-          edges: state.edges.filter((e) => e.id !== state.selectedEdgeId),
+          edges: state.edges.filter(e => e.id !== state.selectedEdgeId),
+          connections: state.connections.filter(c => c.id !== state.selectedEdgeId),
           selectedEdgeId: undefined,
+          designStatus: "NOT_VALIDATED",
         };
       }
 
       if (state.selectedNodeId) {
         return {
-          nodes: state.nodes.filter((n) => n.id !== state.selectedNodeId),
+          nodes: state.nodes.filter(n => n.id !== state.selectedNodeId),
           edges: state.edges.filter(
-            (e) =>
-              e.source !== state.selectedNodeId &&
-              e.target !== state.selectedNodeId
+            e => e.source !== state.selectedNodeId && e.target !== state.selectedNodeId
+          ),
+          connections: state.connections.filter(
+            c => c.sourceId !== state.selectedNodeId && c.targetId !== state.selectedNodeId
           ),
           selectedNodeId: undefined,
+          designStatus: "NOT_VALIDATED",
         };
       }
 
       return state;
     }),
 
-  publishDesign: () => {
-    const { nodes, edges } = get();
+  generateCode: () => {
+    const { connections } = get();
+    const code = connections
+      .map(c => `${c.sourceId} -> ${c.targetId} [${c.relationName}]`)
+      .join("\n");
 
-    if (nodes.length === 0) {
-      return {
-        success: false,
-        message: "Canvas is empty. Nothing to publish."
-      }
-    }
+    set({ generatedCode: code });
+  },
 
-    if (edges.length === 0) {
-      return {
-        success: false,
-        message: "Please check your design. Some processors are not connected."
-      }
-    }
+  validateDesign: () => {
+    const { nodes, connections } = get();
 
-    const connectiodNodeIds = new Set<string>();
-    edges.forEach((e: any) => {
-      connectiodNodeIds.add(e.source);
-      connectiodNodeIds.add(e.target);
+    if (!nodes.length)
+      return { success: false, errors: "Canvas is empty" };
+
+    if (!connections.length)
+      return { success: false, errors: "No connections defined" };
+
+    const connected = new Set<string>();
+    connections.forEach(c => {
+      connected.add(c.sourceId);
+      connected.add(c.targetId);
     });
 
-    const hasUnconnectedNode = nodes.some(
-      (n: any) => !connectiodNodeIds.has(n.id)
-    );
+    const invalid = nodes.some(n => !connected.has(n.id));
+    if (invalid)
+      return { success: false, errors: "Unconnected processor detected" };
 
-    if (hasUnconnectedNode) {
+    set({ designStatus: "VALIDATED" });
+    return { success: true };
+  },
+
+  publishDesign: () => {
+    const { designStatus, nodes, connections } = get();
+
+    if (designStatus !== "VALIDATED") {
       return {
         success: false,
-        message: "Please check your design. Some processors are not connected.",
+        message: "Design must be validated first",
       };
     }
-    const payload = {
-      nodes,
-      connections: edges,
-    };
 
-    console.log("[POST] PUBLISH DESIGN PAYLOAD", payload);
+    const payload = { nodes, connections };
+    console.log("[PUBLISH DESIGN]", payload);
 
     return {
       success: true,
       message: "Design published successfully",
       payload,
     };
-  }
+  },
 }));

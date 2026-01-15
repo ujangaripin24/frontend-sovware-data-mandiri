@@ -8,11 +8,12 @@ import {
   ScrollShadow,
   Card,
   CardBody,
-  Code
+  Code,
 } from "@heroui/react";
 import { ProcessorIcon } from '../../../components/Icons';
 import { useFlowStore } from '../flow.store';
 import { useNavigate } from 'react-router-dom';
+import RelationNameModal from './RelationModalName';
 
 interface PanelCanvasModalProps {
   isOpen: boolean;
@@ -22,6 +23,8 @@ interface PanelCanvasModalProps {
 
 const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChange, type }) => {
   const [openPublishModal, setPublishModal] = useState(false);
+  const pendingConnection = useFlowStore((s) => s.pendingConnection);
+  const openRelationModal = Boolean(pendingConnection)
   const navigate = useNavigate();
   const {
     loadProcessors,
@@ -32,6 +35,9 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
     addSelectedProcessorsToCanvas,
     clearSelectedProcessors,
     publishDesign,
+    designStatus,
+    generatedCode,
+    validateDesign
   } = useFlowStore();
 
   const handlePublish = () => {
@@ -47,6 +53,7 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
   useEffect(() => {
     loadProcessors()
   }, []);
+
   const renderContent = () => {
     switch (type) {
       case "Parameter":
@@ -140,30 +147,43 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
         </>);
       case "Publish":
         return (<>
+          <h1>Publish Design Flow</h1>
           <Card>
             <CardBody>
               <div className="flex flex-row justify-between">
                 <div className="flex font-bold gap-2 bg-white  align-top">
-                  hai
+                  Design Status
                 </div>
                 <div className="flex gap-2">
-                  <Button size='sm' className='bg-amber-400 text-white'>
-                    Not Validated
+                  <Button size="sm"
+                    className={
+                      designStatus === "VALIDATED"
+                        ? "bg-green-500 text-white"
+                        : "bg-amber-400 text-white"
+                    }
+                  >
+                    {designStatus === "VALIDATED" ? "Validated" : "Not Validated"}
                   </Button>
+
                 </div>
               </div>
             </CardBody>
           </Card>
-          <Code>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia, perferendis voluptates, similique quibusdam quia repudiandae itaque repellat odio blanditiis exercitationem saepe nisi qui voluptatum illo! Iste nobis modi culpa itaque tempore, mollitia nulla qui nam at animi. Harum in deleniti minima dolorum mollitia exercitationem repellendus excepturi accusamus cum! Odio, ex quia quo vero unde iusto esse fuga maiores, similique sunt officia quasi. Praesentium totam obcaecati perferendis consequuntur, quaerat adipisci veritatis nesciunt perspiciatis, repudiandae voluptates voluptatibus? Similique quis fugiat ab, nesciunt, iusto assumenda et illum ullam asperiores dicta quasi earum quia vel reprehenderit nostrum ad dolorem doloremque placeat explicabo voluptatem modi.</Code>
+          <Code>
+            {generatedCode}
+          </Code>
           <ModalFooter>
             <Button
-              onPress={onOpenChange}
-              color='danger'
+              color={designStatus === "VALIDATED" ? "primary" : "warning"}
+              onClick={() => {
+                if (designStatus === "NOT_VALIDATED") {
+                  validateDesign();
+                } else {
+                  handlePublish();
+                }
+              }}
             >
-              Tutup
-            </Button>
-            <Button color="primary" onClick={() => setPublishModal(true)}>
-              Publish
+              {designStatus === "NOT_VALIDATED" ? "Validate" : "Publish"}
             </Button>
           </ModalFooter>
         </>);
@@ -215,11 +235,14 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
               Cancel
             </Button>
             <Button color="primary" onClick={handlePublish}>
-              Confirm Publish
+              Publish
             </Button>
           </div>
         </ModalContent>
       </Modal>
+      <RelationNameModal
+        isOpen={openRelationModal}
+      />
     </>
   );
 };

@@ -52,9 +52,8 @@ password: 123456
 * Maka akan muncul modal yang menampilkan daftar data  Flow yang [Anggap Saja] sudah tersedia.
 * Pilih salah satu Flow yang akan dibuat Pemrosesan alur diagram.
 * Maka akan muncul Canvas
-* Pada panel Canvas pilih 'PROCESSOR' (sebelah kanan icon CPU)
+* Pada panel Canvas pilih 'PROCESSOR' (sebelah kanan dengan icon CPU)
 * Pilih 1 atau 2 'Entity' yang akan dibuatkan 'Flow' kemudiah klik 'Add'
-
 
 ## Task
 ### 1. Authentication
