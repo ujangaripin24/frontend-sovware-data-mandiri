@@ -83,6 +83,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
               <MenuItem
                 active={isActive('/dashboard/monitor')}
+                component={<Link to="/dashboard/monitor" />}
                 icon={<MonitorIcon />}
               >
                 Monitor
@@ -98,7 +99,11 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             </SubMenu>
 
             <SubMenu defaultOpen label="Management">
-              <MenuItem icon={<UserIcon />}> Users Management</MenuItem>
+              <MenuItem
+                active={isActive('/dashboard/user')}
+                icon={<UserIcon />}
+                component={<Link to="/dashboard/user"/>}
+              >Users Management</MenuItem>
             </SubMenu>
           </Menu>
         </div>

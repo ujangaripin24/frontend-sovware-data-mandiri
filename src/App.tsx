@@ -9,6 +9,8 @@ import Layout from "./components/Layout";
 import DashboardPage from "./modules/dashboard/dashboard.page";
 import AlertModalExpireToken from "./modules/auth/components/AlertModalExpireToken";
 import DesignClassPage from "./modules/design/design-class.page";
+import MonitorPage from "./modules/monitor/monitor.page";
+import UserPage from "./modules/user/user.page";
 
 function App() {
   const checkToken = useAuthStore((s) => s.checkToken);
@@ -40,6 +42,8 @@ function App() {
           >
             <Route index element={<DashboardPage />} />
             <Route path="design" element={<DesignClassPage />} />
+            <Route path="monitor" element={<MonitorPage />} />
+            <Route path="user" element={<UserPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

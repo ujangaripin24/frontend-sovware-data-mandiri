@@ -35,7 +35,7 @@ const Header: React.FC<NavigationBarProps> = ({ toggleSidebar }) => {
         <NavbarItem>
           <Breadcrumbs size="sm">
             <BreadcrumbItem key="home">
-              <Link to="/">Home</Link>
+              Home
             </BreadcrumbItem>
             {pathnames.map((value, index) => {
               const to = `/${pathnames.slice(0, index + 1).join("/")}`;
