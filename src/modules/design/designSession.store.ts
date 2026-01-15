@@ -44,12 +44,10 @@ interface DesignClassState {
   setSearch: (value: string) => void;
   setPage: (page: number) => void;
   openClass: (cls: DesignClass) => void;
-  openFlow: (flw: DesignFlow) => void;
   closeModalFlow: () => void;
   closeModal: () => void;
   applyFilterAndPagination: () => void;
   selectClass: (cls: DesignClass) => void;
-  selectFlow: (flw: DesignFlow) => void;
   openModal: () => void;
   openModalFlow: (flw: DesignFlow) => void;
 }
@@ -90,15 +88,15 @@ export const useDesignClassStore = create<DesignClassState>((set, get) => ({
 
   loadDesainFlow: () => {
     const dataFlow: DesignFlow[] = [
-      { id: 1, version: "0.1", desainName: "-", status: "Draft", comment: "this my comment", last_updated: "2/2/2024" },
-      { id: 2, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
-      { id: 3, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
-      { id: 4, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
-      { id: 5, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
-      { id: 6, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
-      { id: 7, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
-      { id: 8, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
-      { id: 9, version: "0.1", desainName: "-", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 1, version: "version 0.1", desainName: "Design 1", status: "Draft", comment: "this my comment", last_updated: "2/2/2024" },
+      { id: 2, version: "version 0.2", desainName: "Design 2", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 3, version: "version 0.3", desainName: "Design 3", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 4, version: "version 0.4", desainName: "Design 4", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 5, version: "version 0.5", desainName: "Design 5", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 6, version: "version 0.6", desainName: "Design 6", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 7, version: "version 0.7", desainName: "Design 7", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 8, version: "version 0.8", desainName: "Design 8", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
+      { id: 9, version: "version 0.9", desainName: "Design 9", status: "Draft", comment: "SPBU COCO", last_updated: "2/26/2024" },
     ];
     set({ dataFlow: dataFlow });
   },
@@ -132,24 +130,18 @@ export const useDesignClassStore = create<DesignClassState>((set, get) => ({
   },
 
   openClass: (cls) => {
+    console.log("Pilih class ID:", cls.id)
     set({ selectedClass: cls });
     get().openModal();
   },
 
-  openFlow: (flw) => {
-    set({ selectedFlow: flw, isModalFlowOpen: true })
-  },
-
   selectClass: (cls) => {
+    console.log("Klik class ID:", cls.id);
     set({ selectedClass: cls });
   },
 
-  selectFlow: (flw) => {
-    set({ selectedFlow: flw })
-  },
-
   openModalFlow: (flw: DesignFlow) => {
-    console.log("Klik terdeteksi untuk ID:", flw.id)
+    console.log("Flow ID:", flw.id)
     set({
       selectedFlow: flw,
       isModalFlowOpen: true
@@ -165,14 +157,7 @@ export const useDesignClassStore = create<DesignClassState>((set, get) => ({
   openModal: () => {
     const cls = get().selectedClass;
     if (!cls) return;
-
-    const versions: FlowVersion[] = [
-      { id: "v1", version: "1.0.0", createdAt: "2024-01-10", status: "PUBLISHED" },
-      { id: "v2", version: "1.1.0", createdAt: "2024-02-12", status: "DRAFT" },
-    ];
-
     set({
-      flowVersions: versions,
       isModalOpen: true,
     });
   },

@@ -9,8 +9,8 @@ import {
 } from '@heroui/react'
 import React from 'react'
 import { useDesignClassStore } from '../designSession.store'
-import FlowCanvas from '../../flow/components/FlowCanvas';
 import { BackArrow } from '../../../components/Icons';
+import FlowCanvas from '../../flow/components/FlowCanvas';
 
 const DesainFlowVersionForm: React.FC = () => {
   const { isModalFlowOpen, closeModalFlow, selectedFlow } = useDesignClassStore();
@@ -53,12 +53,7 @@ const DesainFlowVersionForm: React.FC = () => {
             </div>
           </ModalHeader>
           <ModalBody>
-            <div className="p-4">
-              <p><strong>ID:</strong> {selectedFlow?.id}</p>
-            </div>
-            <div>
-              <FlowCanvas />
-            </div>
+            <FlowCanvas />
           </ModalBody>
           <ModalFooter>
             <div className='flex w-full justify-end border-t-1 bg-white border-[#999999]'>

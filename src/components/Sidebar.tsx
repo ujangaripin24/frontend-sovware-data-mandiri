@@ -82,16 +82,16 @@ const SidebarComponent: React.FC<SidebarProps> = ({
               </MenuItem>
 
               <MenuItem
-                active={isActive('/monitor')}
+                active={isActive('/dashboard/monitor')}
                 icon={<MonitorIcon />}
               >
                 Monitor
               </MenuItem>
 
               <MenuItem
-                active={isActive('/dashboard/flow')}
+                active={isActive('/dashboard/design')}
                 icon={<DesainIcon />}
-                component={<Link to="/dashboard/flow" />}
+                component={<Link to="/dashboard/design" />}
               >
                 Design
               </MenuItem>
