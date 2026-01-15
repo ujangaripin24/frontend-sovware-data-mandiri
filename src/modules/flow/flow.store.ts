@@ -44,6 +44,21 @@ export const useFlowStore = create<FlowState>((set, get) => ({
     return processors.filter(p => p.category === selectedCategory);
   },
 
+  addProcessorAtPosition: (x, y) => {
+    set((state) => ({
+      nodes: [
+        ...state.nodes,
+        {
+          id: uuid(),
+          position: { x, y },
+          data: { label: "New Processor" },
+          type: "default",
+        },
+      ],
+      designStatus: "NOT_VALIDATED",
+    }));
+  },
+
   toggleProcessorSelection: (proc) => {
     const selected = get().selectedProcessors;
     const exists = selected.some(p => p.id === proc.id);

@@ -38,6 +38,7 @@ export type FlowState = {
   designStatus: DesignStatus;
   generatedCode: string;
 
+  addProcessorAtPosition: (x: number, y: number) => void;
   loadProcessors: () => void;
   setCategory: (cat: string) => void;
   getFilteredProcessors: () => ProcessorDef[];
