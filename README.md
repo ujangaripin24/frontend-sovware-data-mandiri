@@ -3,19 +3,19 @@
 ### Frontend Test Assesment
 
 ## Tech Stack Requirements
-Bahasa
+#### Bahasa
 * TypeScript
-Depedensi Wajib
+#### Depedensi Wajib
 * HeroUI (UI)
 * Zustand (State Management)
 * React Flow
-Depedensi Tambahan
+#### Depedensi Tambahan
 * React (Build by Vite)
 * React-router-dom
 * React-Pro-Sidebar
 * Embla-Carousel-Autoplay
 * HeroUI Icons
-Struktur Folder
+#### Struktur Folder
 * Based DDD (domain driven design)
 * Per-Modular (dibuat terisolasi)
 
