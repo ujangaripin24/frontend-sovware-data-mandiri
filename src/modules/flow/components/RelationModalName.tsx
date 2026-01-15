@@ -34,17 +34,17 @@ const RelationNameModal: React.FC<RelationNameModalProps> = ({ isOpen }) => {
           >
             <Card>
               <CardBody>
-                <Radio description="Success" value="success">Database is successfully updated</Radio>
+                <Radio description="Database is successfully updated " value="success">Success</Radio>
               </CardBody>
             </Card>
             <Card>
               <CardBody>
-                <Radio description="Failure" value="failure">Database is failed to be updated</Radio>
+                <Radio description="Database is failed to be updated " value="failure">Failure</Radio>
               </CardBody>
             </Card>
             <Card>
               <CardBody>
-                <Radio description="Output" value="output">Database show data output</Radio>
+                <Radio description="Database show data output" value="output">Output</Radio>
               </CardBody>
             </Card>
           </RadioGroup>
