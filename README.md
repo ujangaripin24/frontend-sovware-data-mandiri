@@ -55,6 +55,9 @@ password: 123456
 * Maka akan muncul Canvas
 * Pada panel Canvas pilih 'PROCESSOR' (sebelah kanan dengan icon CPU)
 * Pilih 1 atau 2 'Entity' yang akan dibuatkan 'Flow' kemudiah klik 'Add'
+* Setelah selesai membuat Desain Flow klik publish pada Panel
+* Kemudian akan muncul Modal untuk memvalidasi dan menampilkan Code Data
+* 
 
 ## Task
 ### 1. Authentication

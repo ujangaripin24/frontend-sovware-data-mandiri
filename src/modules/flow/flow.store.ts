@@ -25,6 +25,7 @@ export const useFlowStore = create<FlowState>((set, get) => ({
   generatedCode: "",
 
   loadProcessors: () => {
+    console.log("[FETCH] LOADING PROCESSORS LIST");
     set({
       processors: [
         { id: 1, name: "AppendHostInfo", desc: "Appends host information", category: "Standart" },
@@ -44,6 +45,8 @@ export const useFlowStore = create<FlowState>((set, get) => ({
   },
 
   addProcessorAtPosition: (x, y) => {
+    const newId = uuid();
+    console.log("[CANVAS] ADD NEW PROCESSOR", { id: newId, x, y });
     set((state) => ({
       nodes: [
         ...state.nodes,
@@ -74,6 +77,8 @@ export const useFlowStore = create<FlowState>((set, get) => ({
   addSelectedProcessorsToCanvas: () => {
     const processors = get().selectedProcessors;
     if (!processors.length) return;
+
+    console.log("[CANVAS] ADD BULK PROCESSORS", { count: processors.length });
 
     set(state => ({
       nodes: [
@@ -126,6 +131,7 @@ export const useFlowStore = create<FlowState>((set, get) => ({
   },
 
   startConnect: (sourceId, targetId) => {
+    console.log("[CONNECTION] STARTING CONNECTION", { from: sourceId, to: targetId });
     set({
       pendingConnection: { sourceId, targetId },
     });
@@ -136,6 +142,11 @@ export const useFlowStore = create<FlowState>((set, get) => ({
     if (!pendingConnection) return;
 
     const id = uuid();
+    console.log("[CONNECTION] SAVED RELATION", {
+      relation: relationName,
+      from: pendingConnection.sourceId,
+      to: pendingConnection.targetId
+    });
 
     set({
       connections: [
@@ -166,7 +177,9 @@ export const useFlowStore = create<FlowState>((set, get) => ({
   setSelectedEdge: (id) =>
     set({ selectedEdgeId: id, selectedNodeId: undefined }),
 
-  deleteSelected: () =>
+  deleteSelected: () => {
+    const { selectedNodeId, selectedEdgeId } = get();
+    console.log("[CANVAS] DELETE SELECTED ITEM", { nodeId: selectedNodeId, edgeId: selectedEdgeId });
     set(state => {
       if (state.selectedEdgeId) {
         return {
@@ -192,12 +205,15 @@ export const useFlowStore = create<FlowState>((set, get) => ({
       }
 
       return state;
-    }),
+    })
+  },
 
   generateCode: () => {
+    console.log("[CODE] GENERATING MINIFI CONFIG JSON...");
     const { nodes, connections } = get();
 
     if (!nodes.length) {
+      console.warn("[CODE] GENERATE ABORTED: NO NODES FOUND");
       set({ generatedCode: "" });
       return;
     }
@@ -247,18 +263,22 @@ export const useFlowStore = create<FlowState>((set, get) => ({
     set({
       generatedCode: jsonOutput,
     });
-
-    console.log("MiNiFi Config Generated Successfully");
+    console.log("[CODE] GENERATE SUCCESS", { size: jsonOutput.length });
   },
 
   validateDesign: () => {
+    console.log("[VALIDATION] STARTING VALIDATION PROCESS");
     const { nodes, connections, generateCode } = get();
 
-    if (!nodes.length)
+    if (!nodes.length) {
+      console.error("[VALIDATION] FAILED: CANVAS EMPTY");
       return { success: false, errors: "Canvas is empty" };
+    }
 
-    if (!connections.length)
+    if (!connections.length) {
+      console.error("[VALIDATION] FAILED: NO CONNECTIONS");
       return { success: false, errors: "No connections defined" };
+    }
 
     const connected = new Set<string>();
     connections.forEach(c => {
@@ -267,19 +287,23 @@ export const useFlowStore = create<FlowState>((set, get) => ({
     });
 
     const invalid = nodes.some(n => !connected.has(n.id));
-    if (invalid)
+    if (invalid) {
+      console.error("[VALIDATION] FAILED: DISCONNECTED NODES DETECTED");
       return { success: false, errors: "Unconnected processor detected" };
+    }
 
+    console.log("[VALIDATION] PASSED SUCCESSFULLY");
     generateCode();
-
     set({ designStatus: "VALIDATED" });
     return { success: true };
   },
 
   publishDesign: () => {
     const { designStatus, nodes, connections } = get();
+    console.log("[PUBLISH] ATTEMPTING PUBLISH", { status: designStatus });
 
     if (designStatus !== "VALIDATED") {
+      console.warn("[PUBLISH] BLOCKED: DESIGN NOT VALIDATED");
       return {
         success: false,
         message: "Design must be validated first",
@@ -287,7 +311,7 @@ export const useFlowStore = create<FlowState>((set, get) => ({
     }
 
     const payload = { nodes, connections };
-    console.log("[PUBLISH DESIGN]", payload);
+    console.log("[PUBLISH] SUCCESSFUL", payload);
 
     return {
       success: true,

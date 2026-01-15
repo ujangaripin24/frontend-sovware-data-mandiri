@@ -37,8 +37,15 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
     publishDesign,
     designStatus,
     generatedCode,
-    validateDesign
+    validateDesign,
+    generateCode
   } = useFlowStore();
+
+  useEffect(() => {
+    if (isOpen && type === "Publish") {
+      generateCode();
+    }
+  }, [isOpen, type, generateCode]);
 
   const handlePublish = () => {
     const result = publishDesign();

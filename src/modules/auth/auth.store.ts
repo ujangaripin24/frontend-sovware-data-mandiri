@@ -25,6 +25,7 @@ export const useAuthStore = create<AuthState>()(
       isTokenExpired: false,
 
       login: async (email, password) => {
+        console.log("[POST] LOGIN ATTEMPTING...", { email });
         set({ isLoading: true, error: null });
 
         await new Promise((res) => setTimeout(res, 1000));
@@ -35,6 +36,7 @@ export const useAuthStore = create<AuthState>()(
             expiresAt: Date.now() + 60 * 60 * 1000,
           };
 
+          console.log("[POST] LOGIN SUCCESS", { token });
           set({
             token,
             isAuthenticated: true,
@@ -44,8 +46,10 @@ export const useAuthStore = create<AuthState>()(
           return true;
         }
 
+        const errorMsg = "Invalid credentials";
+        console.error("[POST] LOGIN FAILED:", errorMsg);
         set({
-          error: "Invalid credentials",
+          error: errorMsg,
           isLoading: false,
         });
 
@@ -53,11 +57,13 @@ export const useAuthStore = create<AuthState>()(
       },
 
       clearTokenExpired: () => {
+        console.log("[ACTION] CLEAR TOKEN EXPIRED STATUS");
         set({ isTokenExpired: false });
-        console.log("User force logout");
+        console.log("User force logout sequence completed");
       },
 
       logout: () => {
+        console.log("[ACTION] LOGOUT USER");
         set({
           token: null,
           isAuthenticated: false,
@@ -66,19 +72,28 @@ export const useAuthStore = create<AuthState>()(
 
       checkToken: () => {
         const token = get().token;
+        console.log("[CHECK] VALIDATING TOKEN...");
 
         if (!token) {
+          console.warn("[CHECK] NO TOKEN FOUND");
           set({ isAuthenticated: false });
           return;
         }
 
-        if (Date.now() > token.expiresAt) {
+        const isExpired = Date.now() > token.expiresAt;
+
+        if (isExpired) {
+          console.error("[CHECK] TOKEN EXPIRED", { 
+            expiredAt: new Date(token.expiresAt).toLocaleString(),
+            now: new Date().toLocaleString() 
+          });
           set({
             token: null,
             isAuthenticated: false,
             isTokenExpired: true,
           });
         } else {
+          console.log("[CHECK] TOKEN VALID");
           set({ isAuthenticated: true });
         }
       },
