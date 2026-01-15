@@ -95,6 +95,7 @@ password: 123456
 
 * Klik 'Validate' maka kode akan di Validasi [Anggap Saja] dan Desain siap di Publish
 * setelah selesai user bisa Logout
+*Catatan: Token di set selama 1 jam jika user lebih lama login maka akan dipaksa keluar dan login kembali*
 
 ## Task
 ### 1. Authentication
