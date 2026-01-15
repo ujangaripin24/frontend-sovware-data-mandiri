@@ -9,7 +9,7 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 
 import { useFlowStore } from "../flow.store";
-import { Button, ButtonGroup, Card, CardBody, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, useDisclosure } from "@heroui/react";
+import { Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, useDisclosure } from "@heroui/react";
 import { useDesignClassStore } from "../../design/designSession.store";
 import { ChevronDownIcon, ExportDownIcon, FlagIcon, FunnelIcon, ParameterIcon, ProcessorIcon, PublishDownIcon } from "../../../components/Icons";
 import PanelCanvasModal from "./PanelCanvasModal";
