@@ -12,7 +12,6 @@ import {
 } from "@heroui/react";
 import { ProcessorIcon } from '../../../components/Icons';
 import { useFlowStore } from '../flow.store';
-// import { useNavigate } from 'react-router-dom';
 import RelationNameModal from './RelationModalName';
 
 interface PanelCanvasModalProps {
@@ -25,7 +24,6 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
   const [openPublishModal, setPublishModal] = useState(false);
   const pendingConnection = useFlowStore((s) => s.pendingConnection);
   const openRelationModal = Boolean(pendingConnection)
-  // const navigate = useNavigate();
   const {
     loadProcessors,
     setCategory,
@@ -45,7 +43,6 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
     alert(result.message)
     if (result.success) {
       window.location.reload()
-      // navigate("/dashboard/design");
     }
     setPublishModal(false);
   }

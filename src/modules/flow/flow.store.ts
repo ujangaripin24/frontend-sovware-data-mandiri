@@ -197,15 +197,18 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 
   generateCode: () => {
     const { connections } = get();
+
     const code = connections
       .map(c => `${c.sourceId} -> ${c.targetId} [${c.relationName}]`)
       .join("\n");
+
+    console.log("GENERATED CODE:", code);
 
     set({ generatedCode: code });
   },
 
   validateDesign: () => {
-    const { nodes, connections } = get();
+    const { nodes, connections, generateCode } = get();
 
     if (!nodes.length)
       return { success: false, errors: "Canvas is empty" };
@@ -222,6 +225,8 @@ export const useFlowStore = create<FlowState>((set, get) => ({
     const invalid = nodes.some(n => !connected.has(n.id));
     if (invalid)
       return { success: false, errors: "Unconnected processor detected" };
+
+    generateCode();
 
     set({ designStatus: "VALIDATED" });
     return { success: true };
