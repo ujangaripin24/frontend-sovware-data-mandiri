@@ -56,8 +56,45 @@ password: 123456
 * Pada panel Canvas pilih 'PROCESSOR' (sebelah kanan dengan icon CPU)
 * Pilih 1 atau 2 'Entity' yang akan dibuatkan 'Flow' kemudiah klik 'Add'
 * Setelah selesai membuat Desain Flow klik publish pada Panel
-* Kemudian akan muncul Modal untuk memvalidasi dan menampilkan Code Data
-* 
+* Kemudian akan muncul Modal untuk memvalidasi dan menampilkan Code Data seperti dibawah
+```
+{
+  "id": "node-uuid",
+  "name": "FetchFile",
+  "class": "org.apache.nifi.minifi.processors.FetchFile",
+  "max concurrent tasks": 1,
+  "scheduling strategy": "TIMER_DRIVEN",
+  "scheduling period": "5000 ms",
+  "penalization period": "30000 ms",
+  "yield period": "1000 ms",
+  "run duration nanos": 0,
+  "Properties": {},
+  "comment": "",
+  "auto-terminated relationships list": ["failure"]
+}
+```
+```
+{
+  "id": "conn-uuid",
+  "name": "p1/success/p2",
+  "source": {
+    "id": "p1",
+    "name": "p1"
+  },
+  "destination": {
+    "id": "p2",
+    "name": "p2"
+  },
+  "source relationship names": ["success"],
+  "max work queue size": 10000,
+  "max work queue data size": "1 GB",
+  "flowfile expiration": "0 sec"
+}
+```
+*dengan detail seperti data Metric Prometheus*
+
+* Klik 'Validate' maka kode akan di Validasi [Anggap Saja] dan Desain siap di Publish
+* setelah selesai user bisa Logout
 
 ## Task
 ### 1. Authentication
