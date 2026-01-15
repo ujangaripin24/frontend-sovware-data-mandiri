@@ -44,10 +44,10 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
     const result = publishDesign()
     alert(result.message)
     if (result.success) {
-      navigate("/dashboard/design");
+      window.location.reload()
+      // navigate("/dashboard/design");
     }
     setPublishModal(false);
-    window.location.reload()
   }
 
   useEffect(() => {
