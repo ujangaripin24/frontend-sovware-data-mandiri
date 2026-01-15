@@ -15,6 +15,85 @@ export const useFlowStore = create<FlowState>((set, get) => ({
   processors: [],
   selectedCategory: "All",
 
+  selectedProcessor: undefined,
+
+  selectedProcessors: [],
+
+  toggleProcessorSelection: (proc) => {
+    const selected = get().selectedProcessors;
+    const exists = selected.some((p) => p.id === proc.id);
+
+    if (exists) {
+      set({
+        selectedProcessors: selected.filter((p) => p.id !== proc.id),
+      });
+      console.log("UNSELECT:", proc.name);
+    } else {
+      set({
+        selectedProcessors: [...selected, proc],
+      });
+      console.log("SELECT:", proc.name);
+    }
+  },
+
+  clearSelectedProcessors: () => {
+    set({ selectedProcessors: [] });
+  },
+
+  addSelectedProcessorsToCanvas: () => {
+    const processors = get().selectedProcessors;
+    if (processors.length === 0) return;
+
+    set((state) => ({
+      nodes: [
+        ...state.nodes,
+        ...processors.map((proc, index) => ({
+          id: crypto.randomUUID(),
+          position: {
+            x: 150 + index * 40,
+            y: 150 + index * 40,
+          },
+          data: { label: proc.name },
+        })),
+      ],
+    }));
+
+    console.log(
+      "ADD MULTIPLE:",
+      processors.map((p) => p.name)
+    );
+
+    set({ selectedProcessors: [] });
+  },
+
+  selectProcessor: (proc: any) => {
+    set({ selectedProcessor: proc });
+    console.log("SELECT PROCESSOR:", proc.name);
+  },
+
+  clearSelectedProcessor: () => {
+    set({ selectedProcessor: undefined });
+  },
+
+  addSelectedProcessorToCanvas: () => {
+    const proc = get().selectedProcessor;
+    if (!proc) return;
+
+    set((state) => ({
+      nodes: [
+        ...state.nodes,
+        {
+          id: crypto.randomUUID(),
+          position: { x: 150, y: 150 },
+          data: { label: proc.name },
+        },
+      ],
+    }));
+
+    console.log("ADD TO CANVAS:", proc.name);
+
+    set({ selectedProcessor: undefined });
+  },
   loadProcessors: () => {
     set({
       processors: [
@@ -164,7 +243,7 @@ export const useFlowStore = create<FlowState>((set, get) => ({
       connections: edges,
     };
 
-    console.log("PUBLISH DESIGN PAYLOAD", payload);
+    console.log("[POST] PUBLISH DESIGN PAYLOAD", payload);
 
     return {
       success: true,

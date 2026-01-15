@@ -5,6 +5,17 @@ export type FlowState = {
   edges: Edge[];
   selectedNodeId?: string;
   selectedEdgeId?: string;
+  processors: ProcessorDef[];
+  selectedCategory: string;
+  selectedProcessor?: ProcessorDef;
+
+  selectProcessor: (proc: ProcessorDef) => void;
+  selectedProcessors: ProcessorDef[];
+  clearSelectedProcessor: () => void;
+  addSelectedProcessorToCanvas: () => void;
+  toggleProcessorSelection: (proc: ProcessorDef) => void;
+  clearSelectedProcessors: () => void;
+  addSelectedProcessorsToCanvas: () => void;
 
   addProcessorAtPosition: (x: number, y: number) => void;
   onNodesChange: (changes: any) => void;
@@ -14,9 +25,6 @@ export type FlowState = {
   setSelectedNode: (id?: string) => void;
   setSelectedEdge: (id?: string) => void;
   deleteSelected: () => void;
-
-  processors: ProcessorDef[];
-  selectedCategory: string;
 
   loadProcessors: () => void;
   setCategory: (cat: string) => void;
