@@ -1,4 +1,15 @@
-import { Modal, ModalContent, ModalBody, Input, ModalFooter, Button } from "@heroui/react";
+import {
+  Modal,
+  ModalContent,
+  ModalBody,
+  ModalFooter,
+  Button,
+  ModalHeader,
+  RadioGroup,
+  Radio,
+  Card,
+  CardBody
+} from "@heroui/react";
 import type React from "react";
 import { useState } from "react";
 import { useFlowStore } from "../flow.store";
@@ -8,30 +19,46 @@ interface RelationNameModalProps {
 }
 
 const RelationNameModal: React.FC<RelationNameModalProps> = ({ isOpen }) => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState("success");
   const saveConnection = useFlowStore((s) => s.saveConnection);
 
   return (
-    <Modal isOpen={isOpen} backdrop="blur">
+    <Modal isOpen={isOpen} backdrop="blur" isDismissable={false} hideCloseButton>
       <ModalContent>
+        <ModalHeader className="flex flex-col gap-1">Create Connection</ModalHeader>
         <ModalBody>
-          <Input
-            label="Relation Name"
-            placeholder="success / failure / output"
+          <RadioGroup
+            label="Select Relation Name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+            onValueChange={setName}
+          >
+            <Card>
+              <CardBody>
+                <Radio description="Success" value="success">Database is successfully updated</Radio>
+              </CardBody>
+            </Card>
+            <Card>
+              <CardBody>
+                <Radio description="Failure" value="failure">Database is failed to be updated</Radio>
+              </CardBody>
+            </Card>
+            <Card>
+              <CardBody>
+                <Radio description="Output" value="output">Database show data output</Radio>
+              </CardBody>
+            </Card>
+          </RadioGroup>
         </ModalBody>
 
         <ModalFooter>
           <Button
-            color="primary"
+            className="bg-[#2D68A2] text-white"
             onPress={() => {
               saveConnection(name);
-              setName("");
+              setName("success");
             }}
           >
-            Save Relation
+            Add
           </Button>
         </ModalFooter>
       </ModalContent>
