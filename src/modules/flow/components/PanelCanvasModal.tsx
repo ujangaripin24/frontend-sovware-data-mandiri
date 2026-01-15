@@ -166,9 +166,15 @@ const PanelCanvasModal: React.FC<PanelCanvasModalProps> = ({ isOpen, onOpenChang
               </div>
             </CardBody>
           </Card>
-          <Code>
-            {generatedCode}
-          </Code>
+          <div className="w-full max-w-full overflow-y-auto border rounded-lg bg-[#f4f4f5] max-h-[500px]">
+            <Code
+              className="block whitespace-pre p-4 w-full text-xs font-mono"
+              style={{ maxWidth: '100%', display: 'block' }}
+            >
+              {generatedCode}
+            </Code>
+          </div>
+
           <ModalFooter>
             <Button
               color={designStatus === "VALIDATED" ? "primary" : "warning"}

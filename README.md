@@ -44,7 +44,8 @@ email: admin@test.com
 password: 123456
 ```
 * *Jika gagal akan menampilkan pesan Alert*.
-* Setelah berhasil login maka akan menampilkan SplashScreen kemudian diarahkan ke halaman Dashboard .
+* *Catatan: jika email atau password salah maka user diminta memasukkan ulang email dan password*
+* Setelah berhasil login maka akan menampilkan SplashScreen kemudian diarahkan ke halaman Dashboard.
 
 ### Menggunakan Desain Diagram Flow
 * Masuk ke menu Design (Dibagian Sidebar).

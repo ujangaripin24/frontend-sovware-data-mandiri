@@ -11,7 +11,6 @@ export const useFlowStore = create<FlowState>((set, get) => ({
   nodes: [],
   edges: [],
   connections: [],
-
   processors: [],
   selectedProcessors: [],
   selectedProcessor: undefined,
@@ -196,15 +195,60 @@ export const useFlowStore = create<FlowState>((set, get) => ({
     }),
 
   generateCode: () => {
-    const { connections } = get();
+    const { nodes, connections } = get();
 
-    const code = connections
-      .map(c => `${c.sourceId} -> ${c.targetId} [${c.relationName}]`)
-      .join("\n");
+    if (!nodes.length) {
+      set({ generatedCode: "" });
+      return;
+    }
 
-    console.log("GENERATED CODE:", code);
+    const minifiConfig = {
+      "MiNiFi Config Version": 3,
+      "Remote Process Groups": [],
+      "Processors": nodes.map((node) => {
+        const outgoingRelations = connections
+          .filter((c) => c.sourceId === node.id)
+          .map((c) => c.relationName);
 
-    set({ generatedCode: code });
+        const allPossibleRelations = ["success", "failure"];
+        const autoTerminated = allPossibleRelations.filter(
+          (rel) => !outgoingRelations.includes(rel)
+        );
+
+        return {
+          id: node.id,
+          "max concurrent tasks": 1,
+          "scheduling strategy": "TIMER_DRIVEN",
+          "scheduling period": "5000 ms",
+          "penalization period": "30000 ms",
+          "yield period": "1000 ms",
+          "run duration nanos": 0,
+          "auto-terminated relationships list": autoTerminated,
+          "Properties": {},
+          name: node.data?.label || "UnknownProcessor",
+          class: `org.apache.nifi.minifi.processors.${node.data?.label || "Unknown"}`,
+          comment: ""
+        };
+      }),
+      "Connections": connections.map((c) => ({
+        id: c.id,
+        name: `${c.sourceId}/${c.relationName}/${c.targetId}`,
+        source: { id: c.sourceId, name: c.sourceId },
+        destination: { id: c.targetId, name: c.targetId },
+        "source relationship names": [c.relationName],
+        "max work queue size": 10000,
+        "max work queue data size": "1 GB",
+        "flowfile expiration": "0 sec"
+      }))
+    };
+
+    const jsonOutput = JSON.stringify(minifiConfig, null, 2);
+
+    set({
+      generatedCode: jsonOutput,
+    });
+
+    console.log("MiNiFi Config Generated Successfully");
   },
 
   validateDesign: () => {
